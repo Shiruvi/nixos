@@ -29,7 +29,7 @@
     homeConfigurations.Shiruvi = home-manager.lib.homeManagerConfiguration {
       pkgs = nixpkgs.legacyPackages."x86_64-linux";
       modules = [
-        ./home/home.nix
+        ./home/Shiruvi/home.nix
       ];
     };
   };

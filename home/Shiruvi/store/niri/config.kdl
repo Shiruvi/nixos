@@ -1,0 +1,234 @@
+// This config is in the KDL format: https://kdl.dev
+// "/-" comments out the following node.
+// Check the wiki for a full description of the configuration:
+// https://github.com/YaLTeR/niri/wiki/Configuration:-Overview
+
+// Input device configuration.
+// Find the full list of options on the wiki:
+// https://github.com/YaLTeR/niri/wiki/Configuration:-Input
+input {
+    keyboard {
+        repeat-delay 300
+        numlock
+        track-layout "window"
+        xkb {
+           layout "us,ru"
+           options "grp:alt_shift_toggle,compose:ralt,ctrl:nocaps"
+        }
+    }
+    touchpad {
+        tap
+        dwt
+        natural-scroll
+        
+    }
+    focus-follows-mouse
+    warp-mouse-to-focus
+}
+
+// Monitor configuration.
+// Find more information on the wiki:
+// https://github.com/YaLTeR/niri/wiki/Configuration:-Outputs
+output "eDP-1" {
+    // Run `niri msg outputs` while inside a niri instance to list all outputs and their modes.
+    mode "1920x1080@60"
+    scale 1
+    transform "normal"
+    position x=0 y=0
+}
+output "DP-1" {
+    focus-at-startup
+    transform "normal"
+    mode "5120x1440@119.970"
+    position x=0 y=1440
+    layout {
+        default-column-width { proportion 0.25; }
+    }
+}
+output "DP-2" {
+        position x=2560 y=0
+}
+output "HDMI-A-1"{
+        position x=640 y=360
+}
+
+// Settings that influence how windows are positioned and sized.
+// Find more information on the wiki:
+// https://github.com/YaLTeR/niri/wiki/Configuration:-Layout
+layout {
+    gaps 10
+    center-focused-column "on-overflow"
+    always-center-single-column
+    empty-workspace-above-first
+    preset-column-widths {
+        proportion 0.25
+        proportion 0.3333333
+        proportion 0.5
+        proportion 0.6666667
+        proportion 0.75
+        proportion 1.0
+    }
+    preset-window-heights {
+        proportion 0.25
+        proportion 0.3333333
+        proportion 0.5
+        proportion 0.6666667
+        proportion 0.75
+        proportion 1.0
+    }
+    default-column-width { proportion 0.5; }
+    focus-ring {
+        width 2
+        active-color "#d8dadd"
+        inactive-color "#0b0b0c"
+    }
+    border {
+        off
+    }
+    struts {
+        left 0
+        right 0
+        top 0
+        bottom 0
+    }
+    background-color "transparent"
+
+
+}
+
+
+// startup processes
+spawn-sh-at-startup "swww-daemon"
+spawn-sh-at-startup "swaybg -i Pictures/Wallpapers/16b.jpg"
+spawn-sh-at-startup "solaar -w hide"
+// Animation settings.
+// The wiki explains how to configure individual animations:
+// https://github.com/YaLTeR/niri/wiki/Configuration:-Animations
+animations {}
+
+// Window rules let you adjust behavior for individual windows.
+// Find more information on the wiki:
+// https://github.com/YaLTeR/niri/wiki/Configuration:-Window-Rules
+layer-rule {
+    match namespace="^wallpaper$"
+    place-within-backdrop true
+}
+layer-rule {
+    match namespace="^notifications$"
+    block-out-from "screencast"
+}
+window-rule {
+    match app-id=r#"^org\.keepassxc\.KeePassXC$"#
+
+
+    block-out-from "screencast"
+}
+window-rule {
+    geometry-corner-radius 10
+    clip-to-geometry true
+}
+cursor {
+    xcursor-theme "Bibata-Modern-Ice"
+    xcursor-size 24
+    hide-when-typing
+    hide-after-inactive-ms 1000
+}
+
+binds {
+    // Applications
+    Mod+Return      { spawn-sh "kitty --hold sh -c fastfetch"; }
+    Mod+Space hotkey-overlay-title="Application Launcher" { spawn "fuzzel"; }
+    Mod+B           { spawn-sh "firefox"; }
+    Mod+E           { spawn-sh "nautilus"; }
+    // Mod+Shift+T     { spawn "Telegram"; }
+    Mod+Shift+D     { spawn "vesktop"; }
+
+    Mod+Shift+E { quit skip-confirmation=true; }
+
+    // Audio
+    XF86AudioRaiseVolume allow-when-locked=true { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1+"; }
+    XF86AudioLowerVolume allow-when-locked=true { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1-"; }
+    XF86AudioMute        allow-when-locked=true { spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"; }
+    XF86AudioMicMute     allow-when-locked=true { spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"; }
+
+    //sound
+    XF86AudioPlay allow-when-locked=true { spawn-sh "playerctl play-pause"; }
+    XF86AudioNext allow-when-locked=true { spawn-sh "playerctl next"; }
+    XF86AudioPrev allow-when-locked=true { spawn-sh "playerctl previous"; }
+    XF86AudioStop allow-when-locked=true { spawn-sh "playerctl stop"; }
+
+    //brightness
+    XF86MonBrightnessUp allow-when-locked=true { spawn "brightnessctl" "--class=backlight" "set" "+10%"; }
+    XF86MonBrightnessDown allow-when-locked=true { spawn "brightnessctl" "--class=backlight" "set" "10%-"; }
+    
+    //PC control
+    Mod+O                { power-off-monitors; }
+    Mod+Shift+O          { power-on-monitors; }
+    // Windows and Columns
+    Mod+WheelScrollDown cooldown-ms=150 { focus-workspace-down; }
+    Mod+WheelScrollUp   cooldown-ms=150 { focus-workspace-up; }
+    Mod+WheelScrollRight                { focus-column-right-or-first; }
+    Mod+WheelScrollLeft                 { focus-column-left-or-last; }
+    Mod+W                { toggle-column-tabbed-display; }
+    Mod+Q                { close-window; }
+    Mod+T                { switch-focus-between-floating-and-tiling; }
+    Mod+Shift+T          { toggle-window-floating; }
+    Mod+M                { maximize-column; }
+    Mod+F                { fullscreen-window; }
+    Mod+Shift+F          { toggle-windowed-fullscreen; }
+    Mod+Left             { focus-column-left-or-last; }
+    Mod+Right            { focus-column-right-or-first; }
+    Mod+Down             { focus-window-or-workspace-down; }
+    Mod+Up               { focus-window-or-workspace-up; }
+    Mod+Shift+Left       { focus-monitor-left; }
+    Mod+Shift+Right      { focus-monitor-right; }
+    Mod+Shift+Down       { focus-monitor-down; }
+    Mod+Shift+Up         { focus-monitor-up; }
+    Mod+Minus            { switch-preset-column-width-back; }
+    Mod+Equal            { switch-preset-column-width; }
+    Mod+Shift+Minus      { switch-preset-window-height-back; }
+    Mod+Shift+Equal      { switch-preset-window-height; }
+    Mod+R                { reset-window-height; }
+    // Mod+[                { swap-window-left; }
+    // Mod+]                { swap-window-right; }
+    Mod+Comma            { consume-window-into-column; }
+    Mod+Period           { expel-window-from-column; }
+
+    // Workspaces
+    Mod+Ctrl+Down      { move-column-to-workspace-down; }
+    Mod+Ctrl+Up        { move-column-to-workspace-up; }
+    Mod+1              { focus-workspace 1; }
+    Mod+2              { focus-workspace 2; }
+    Mod+3              { focus-workspace 3; }
+    Mod+4              { focus-workspace 4; }
+    Mod+5              { focus-workspace 5; }
+    Mod+6              { focus-workspace 6; }
+    Mod+7              { focus-workspace 7; }
+    Mod+8              { focus-workspace 8; }
+    Mod+9              { focus-workspace 9; }
+    Mod+0              { focus-workspace 0; }
+    Mod+Shift+1        { move-column-to-workspace 1; }
+    Mod+Shift+2        { move-column-to-workspace 2; }
+    Mod+Shift+3        { move-column-to-workspace 3; }
+    Mod+Shift+4        { move-column-to-workspace 4; }
+    Mod+Shift+5        { move-column-to-workspace 5; }
+    Mod+Shift+6        { move-column-to-workspace 6; }
+    Mod+Shift+7        { move-column-to-workspace 7; }
+    Mod+Shift+8        { move-column-to-workspace 8; }
+    Mod+Shift+9        { move-column-to-workspace 9; }
+    Mod+Shift+0        { move-column-to-workspace 10; }
+    Mod+Tab            { toggle-overview; }
+
+    // Screenshots
+    Print       { screenshot; }
+    Ctrl+Print  { screenshot-window; }
+    Mod+Ctrl+Print  { screenshot-window write-to-disk=false; }
+    Mod+Shift+Print { screenshot-screen write-to-disk=false; }
+}
+
+// misc configuration
+screenshot-path "~/Pictures/Screenshots/Screenshot From %Y-%m-%d %H-%M-%S.png"
+prefer-no-csd
+hotkey-overlay {
+    skip-at-startup
+}
