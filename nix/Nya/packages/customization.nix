@@ -1,17 +1,18 @@
 {
   pkgs,
-  config,
   ...
 }:
 {
   programs.dconf.profiles.user = {
-    databases = [{
-      settings = {
-        "org/gnome/desktop/wm/preferences" = {
-          button-layout = "";
+    databases = [
+      {
+        settings = {
+          "org/gnome/desktop/wm/preferences" = {
+            button-layout = "";
+          };
         };
-      };
-    }];
+      }
+    ];
   };
   # fonts
   fonts.packages = with pkgs; [
@@ -28,7 +29,7 @@
     # cursors
     bibata-cursors
     # themes
-    adw-gtk3
+    tokyonight-gtk-theme
     # icons
     adwaita-icon-theme
   ];

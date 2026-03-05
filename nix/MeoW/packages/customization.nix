@@ -1,17 +1,18 @@
 {
   pkgs,
-  config,
   ...
 }:
 {
   programs.dconf.profiles.user = {
-    databases = [{
-      settings = {
-        "org/gnome/desktop/wm/preferences" = {
-          button-layout = "";
+    databases = [
+      {
+        settings = {
+          "org/gnome/desktop/wm/preferences" = {
+            button-layout = "";
+          };
         };
-      };
-    }];
+      }
+    ];
   };
   # fonts
   fonts.packages = with pkgs; [
