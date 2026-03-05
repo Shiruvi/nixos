@@ -7,5 +7,6 @@
     ".config/kitty".source = ./kitty;
     ".config/mako".source = ./mako;
     ".config/niri".source = ./niri;
+    ".config/fastfetch".source = ./fastfetch;
   };
 }
