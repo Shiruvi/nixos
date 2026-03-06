@@ -1,4 +1,4 @@
-{ pkgs, config, ... }:
+{ pkgs, ... }:
 {
   imports = [
     ./MeoW/modules.nix
@@ -10,7 +10,6 @@
     nh
   ];
   nixpkgs.config.allowUnfree = true;
-  programs.steam.enable = true;
   networking.hostName = "MeoW";
   time.timeZone = "Europe/Moscow";
 }

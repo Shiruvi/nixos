@@ -1,4 +1,4 @@
-{ pkgs, config, ... }:
+{ pkgs, ... }:
 {
   imports = [
     ./Nya/modules.nix
@@ -10,7 +10,6 @@
     nh
   ];
   nixpkgs.config.allowUnfree = true;
-  programs.steam.enable = true;
   networking.hostName = "Nya";
   time.timeZone = "Europe/Moscow";
 }
