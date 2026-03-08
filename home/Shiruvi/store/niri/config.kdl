@@ -98,7 +98,7 @@ layout {
 
 
 // startup processes
-spawn-sh-at-startup "swww-daemon"
+spawn-at-startup "swww-daemon"
 spawn-sh-at-startup "swaybg -i Pictures/Wallpapers/back -m fill"
 spawn-sh-at-startup "solaar -w hide"
 // Animation settings.
