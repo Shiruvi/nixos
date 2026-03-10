@@ -3,6 +3,7 @@
   ...
 }:
 {
+  programs.obs-studio.enable = true;
   environment.systemPackages = with pkgs; [
     git
     telegram-desktop

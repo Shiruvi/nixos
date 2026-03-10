@@ -6,11 +6,13 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    simple-wallpaper-engine.url = "github:Maxnights/simple-linux-wallpaperengine-gui";
   };
   outputs =
     {
       nixpkgs,
       home-manager,
+      simple-wallpaper-engine,
       ...
     }:
     {
@@ -32,6 +34,7 @@
         pkgs = nixpkgs.legacyPackages."x86_64-linux";
         modules = [
           ./home/Shiruvi/home.nix
+          simple-wallpaper-engine.homeManagerModules.default
         ];
       };
     };
