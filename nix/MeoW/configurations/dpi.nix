@@ -3,9 +3,12 @@
   ...
 }:
 {
-  programs.amnezia-vpn.enable = true;
+  programs.amnezia-vpn = {
+    enable = true;
+    package = pkgs.amnezia-vpn;
+  };
   environment.systemPackages = with pkgs; [
     nftables
-    amnezia-vpn
+    openvpn
   ];
 }
