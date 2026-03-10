@@ -1,5 +1,6 @@
 {
   pkgs,
+  inputs,
   ...
 }:
 {
@@ -25,7 +26,8 @@
   ];
   environment.systemPackages = with pkgs; [
     #live wallpapers
-    linux-wallpaperengine
+    inputs.linux-wallpaper-engine.packages.${pkgs.stdenv.hostPlatform.system}.default
+    # linux-wallpaperengine
     # gui customization app
     nwg-look
     # cursors
