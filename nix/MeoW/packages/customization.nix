@@ -1,6 +1,5 @@
 {
   pkgs,
-  inputs,
   ...
 }:
 {
@@ -25,9 +24,6 @@
     adwaita-fonts
   ];
   environment.systemPackages = with pkgs; [
-    #live wallpapers
-    inputs.linux-wallpaper-engine.packages.${pkgs.stdenv.hostPlatform.system}.default
-    # linux-wallpaperengine
     # gui customization app
     nwg-look
     # cursors

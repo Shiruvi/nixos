@@ -24,8 +24,6 @@
     adwaita-fonts
   ];
   environment.systemPackages = with pkgs; [
-    #live wallpapers
-    linux-wallpaperengine
     # gui customization app
     nwg-look
     # cursors
