@@ -15,5 +15,6 @@
     alsa-utils
     bind
     yazi
+    gimp
   ];
 }
