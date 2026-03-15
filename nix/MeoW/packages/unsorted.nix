@@ -16,5 +16,6 @@
     alsa-utils
     bind
     yazi
+    kdePackages.kdenlive
   ];
 }
