@@ -5,6 +5,11 @@ return {
       mason = {
         ensure_installed = {},
       },
+      servers = {
+        clangd = {
+          cmd = { "clangd" },
+        },
+      },
     },
   },
-}
+    }
