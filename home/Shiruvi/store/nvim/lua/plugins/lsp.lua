@@ -2,9 +2,8 @@ return {
   {
     "neovim/nvim-lspconfig",
     opts = {
-      servers = {
-        clangd = {},
-        cmake = {},
+      mason = {
+        ensure_installed = {},
       },
     },
   },
