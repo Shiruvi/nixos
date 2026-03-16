@@ -7,8 +7,4 @@
 return {
   "AstroNvim/astrocommunity",
   { import = "astrocommunity.colorscheme.tokyonight-nvim" },
-  require("lspconfig").clangd.setup{
-  cmd = { "clangd" }, -- явно указать, чтобы не брал из mason
-
-}
 }
