@@ -1,15 +1,16 @@
 return {
   {
-    "neovim/nvim-lspconfig",
+    "AstroNvim/astrolsp",
     opts = {
-      mason = {
-        ensure_installed = {},
-      },
-      servers = {
+      servers = { "clangd", "cmake" },
+      config = {
         clangd = {
           cmd = { "clangd" },
+        },
+        cmake = {
+          cmd = { "cmake-language-server" },
         },
       },
     },
   },
-    }
+}

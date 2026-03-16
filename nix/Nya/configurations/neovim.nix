@@ -16,10 +16,14 @@
     clang
     yarn
     gcc
+    gnumake
     rustc
     cargo
     clang-tools
     cmake
     cmake-language-server
+
+    #libraries
+    boost
   ];
 }

@@ -16,6 +16,8 @@
     alsa-utils
     bind
     yazi
+    gimp
     kdePackages.kdenlive
+    remmina
   ];
 }
