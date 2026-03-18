@@ -7,6 +7,7 @@
     ./niri.nix
     ./neovim.nix
     ./dpi.nix
+    ./security.nix
     ./otd.nix
   ];
 }
