@@ -22,8 +22,5 @@
     clang-tools
     cmake
     cmake-language-server
-
-    #libraries
-    boost
   ];
 }
