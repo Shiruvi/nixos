@@ -10,7 +10,13 @@
     zip
     unzip
     wl-clipboard
-    eza
+    lsd
     bat
+    zoxide
+    fd
+    ripgrep
+    fzf
+    lazygit
+    superfile
   ];
 }
