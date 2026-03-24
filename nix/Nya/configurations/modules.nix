@@ -9,6 +9,5 @@
     ./dpi.nix
     ./security.nix
     ./otd.nix
-    ./virtmanager.nix
   ];
 }
