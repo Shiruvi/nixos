@@ -9,7 +9,7 @@
     home-manager
     nh
   ];
-  nixpkgs.config.allowUnfree = true;
+  boot.kernelPackages = pkgs.linuxPackages_latest;
   networking.hostName = "MeoW";
   time.timeZone = "Europe/Moscow";
 }

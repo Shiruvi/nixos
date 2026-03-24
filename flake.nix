@@ -25,11 +25,11 @@
             inherit system;
             pkgs-stable = import nixpkgs-stable {
               inherit system;
-              config.allowUnfree = true;
             };
           };
           modules = [
             ./nix/Nya.nix
+            ./licenses/Nya.nix
           ];
         };
         MeoW = nixpkgs.lib.nixosSystem {
@@ -37,11 +37,11 @@
             inherit system;
             pkgs-stable = import nixpkgs-stable {
               inherit system;
-              config.allowUnfree = true;
             };
           };
           modules = [
             ./nix/MeoW.nix
+            ./licenses/MeoW.nix
           ];
         };
       };
