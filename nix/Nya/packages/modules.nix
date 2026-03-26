@@ -5,6 +5,7 @@
     ./browsers.nix
     ./office.nix
     ./cisco.nix
+    ./messagers.nix
     ./unsorted.nix
   ];
 }
