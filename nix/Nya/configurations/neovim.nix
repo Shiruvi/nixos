@@ -20,7 +20,6 @@
     rustc
     cargo
     clang-tools
-    cmake
     cmake-language-server
   ];
 }
