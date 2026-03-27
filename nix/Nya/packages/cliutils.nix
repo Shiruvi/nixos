@@ -19,6 +19,6 @@
     fzf
     lazygit
     superfile
-    youtube-dl
+    yt-dlp
   ];
 }
