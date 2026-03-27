@@ -4,19 +4,21 @@
 }:
 {
   environment.systemPackages = with pkgs; [
-    fastfetch
+    speedtest
     btop
     brightnessctl
     zip
     unzip
     wl-clipboard
-    lsd
-    bat
     zoxide
+    alsa-utils
+    bind
+    amdgpu_top
     fd
     ripgrep
     fzf
     lazygit
     superfile
+    youtube-dl
   ];
 }

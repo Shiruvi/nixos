@@ -6,6 +6,7 @@
     ./office.nix
     ./cisco.nix
     ./messagers.nix
+    ./cute.nix
     ./unsorted.nix
   ];
 }

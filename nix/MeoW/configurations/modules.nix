@@ -8,6 +8,7 @@
     ./neovim.nix
     ./dpi.nix
     ./security.nix
+    ./develop.nix
     ./otd.nix
   ];
 }
