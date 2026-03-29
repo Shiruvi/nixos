@@ -17,5 +17,5 @@
       "wireshark"
     ];
   };
-  nix.trustedUsers = [ "Shiruvi" ];
+  nix.settings.trusted-users = [ "Shiruvi" ];
 }

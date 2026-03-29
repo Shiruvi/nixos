@@ -8,7 +8,7 @@
     keepassxc
     baobab
     pavucontrol
-    gimp
+    krita
     kdePackages.kdenlive
     remmina
   ];
