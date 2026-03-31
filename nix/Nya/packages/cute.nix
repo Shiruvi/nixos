@@ -9,6 +9,6 @@
     bat
     cmatrix
     kittysay
-    oneko
+
   ];
 }
