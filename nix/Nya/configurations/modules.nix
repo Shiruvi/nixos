@@ -9,6 +9,7 @@
     ./dpi.nix
     ./security.nix
     ./develop.nix
+    ./bluetooth.nix
     ./otd.nix
   ];
 }

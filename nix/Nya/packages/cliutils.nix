@@ -3,6 +3,11 @@
   ...
 }:
 {
+  programs.zoxide = {
+    enable = true;
+    package = pkgs.zoxide;
+    enableFishIntegration = true;
+  };
   environment.systemPackages = with pkgs; [
     speedtest
     btop
@@ -10,7 +15,6 @@
     zip
     unzip
     wl-clipboard
-    zoxide
     alsa-utils
     bind
     amdgpu_top

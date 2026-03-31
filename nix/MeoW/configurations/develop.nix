@@ -8,5 +8,6 @@
     nix-btm
     git
     grex
+    cmake
   ];
 }
