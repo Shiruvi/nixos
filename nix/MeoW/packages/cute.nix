@@ -6,9 +6,14 @@
   environment.systemPackages = with pkgs; [
     fastfetch
     lsd
-    eza
     bat
     cmatrix
     kittysay
+    genact
+    cool-retro-term
+    lavat
+    mapscii
+    tty-clock
+    globe-cli
   ];
 }
