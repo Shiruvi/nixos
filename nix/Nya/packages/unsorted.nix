@@ -10,6 +10,7 @@
     pavucontrol
     krita
     kdePackages.kdenlive
+    mpv
     remmina
   ];
 }
