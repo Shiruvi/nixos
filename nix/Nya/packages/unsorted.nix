@@ -11,6 +11,7 @@
     krita
     kdePackages.kdenlive
     mpv
+    blender
     remmina
   ];
 }

@@ -13,7 +13,7 @@
     fuzzel
     kitty
     mako
-    swww
+    awww
     swaybg
   ];
 
