@@ -13,5 +13,6 @@
     mpv
     blender
     remmina
+    qbittorrent
   ];
 }
