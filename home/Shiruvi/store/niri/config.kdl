@@ -99,6 +99,7 @@ layout {
 
 // startup processes
 spawn-at-startup "awww-daemon"
+spawn-at-startup "noctalia-shell"
 spawn-sh-at-startup "swaybg -i Pictures/Wallpapers/back -m fill"
 spawn-sh-at-startup "solaar -w hide"
 // Animation settings.

@@ -13,7 +13,7 @@
     };
   };
   outputs =
-    {
+    inputs@{
       nixpkgs,
       nixpkgs-stable,
       home-manager,
@@ -27,6 +27,7 @@
         Nya = nixpkgs.lib.nixosSystem {
           specialArgs = {
             inherit system;
+            inherit inputs;
             pkgs-stable = import nixpkgs-stable {
               inherit system;
             };
@@ -39,6 +40,7 @@
         MeoW = nixpkgs.lib.nixosSystem {
           specialArgs = {
             inherit system;
+            inherit inputs;
             pkgs-stable = import nixpkgs-stable {
               inherit system;
             };
