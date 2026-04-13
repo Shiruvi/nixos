@@ -13,9 +13,6 @@
     nautilus
     fuzzel
     kitty
-    mako
-    awww
-    swaybg
     inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default
   ];
 
