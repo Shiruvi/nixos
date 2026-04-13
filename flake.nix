@@ -7,12 +7,17 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    noctalia = {
+      url = "github:noctalia-dev/noctalia-shell";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
   outputs =
     {
       nixpkgs,
       nixpkgs-stable,
       home-manager,
+      noctalia,
       ...
     }:
     let
@@ -49,6 +54,7 @@
         pkgs = nixpkgs.legacyPackages.${system};
         modules = [
           ./home/Shiruvi/home.nix
+          noctalia.homeModules.default
         ];
       };
     };

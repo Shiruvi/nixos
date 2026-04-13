@@ -124,7 +124,7 @@ window-rule {
     block-out-from "screencast"
 }
 window-rule {
-    geometry-corner-radius 10
+    geometry-corner-radius 20
     clip-to-geometry true
 }
 window-rule {
