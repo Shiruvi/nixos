@@ -93,14 +93,13 @@ layout {
     }
     background-color "transparent"
 
-
 }
 
 
 // startup processes
-spawn-at-startup "awww-daemon"
+// spawn-at-startup "awww-daemon"
+// spawn-sh-at-startup "swaybg -i Pictures/Wallpapers/back -m fill"
 spawn-at-startup "noctalia-shell"
-spawn-sh-at-startup "swaybg -i Pictures/Wallpapers/back -m fill"
 spawn-sh-at-startup "solaar -w hide"
 // Animation settings.
 // The wiki explains how to configure individual animations:
@@ -110,9 +109,23 @@ animations {}
 // Window rules let you adjust behavior for individual windows.
 // Find more information on the wiki:
 // https://github.com/YaLTeR/niri/wiki/Configuration:-Window-Rules
+// layer-rule {
+    // match namespace="^noctalia-overview*"
+    // place-within-backdrop true
+// }
+// Set the regular wallpaper on the backdrop.
 layer-rule {
-    match namespace="^wallpaper$"
-    place-within-backdrop true
+  match namespace="^noctalia-wallpaper*"
+  place-within-backdrop true
+}
+
+// Set transparent workspace background color so you see the backdrop at all times.
+
+// Optionally, disable the workspace shadows in the overview.
+overview {
+  workspace-shadow {
+    off
+  }
 }
 layer-rule {
     match namespace="^notifications$"
@@ -153,11 +166,12 @@ cursor {
 binds {
     // Applications
     Mod+Return                                            { spawn-sh "kitty --hold sh -c fastfetch"; }
-    Mod+Space hotkey-overlay-title="Application Launcher" { spawn "fuzzel"; }
+    Mod+Space hotkey-overlay-title="Application Launcher" { spawn-sh "noctalia-shell ipc call launcher toggle"; }
     Mod+B                                                 { spawn-sh "firefox"; }
     Mod+E                                                 { spawn-sh "nautilus"; }
     Mod+Alt+T                                             { spawn "Telegram"; }
     Mod+Alt+D                                             { spawn "vesktop"; }
+    Mod+V                                                 { spawn-sh "noctalia-shell ipc call launcher clipboard"; }
 
     Mod+Shift+E                                           { quit skip-confirmation=true; }
 
