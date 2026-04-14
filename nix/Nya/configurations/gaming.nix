@@ -7,6 +7,7 @@
     enable = true;
     package = pkgs.power-profiles-daemon;
   };
+  services.upower.enable = true;
   programs = {
     steam = {
       enable = true;
