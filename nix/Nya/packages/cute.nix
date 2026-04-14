@@ -15,5 +15,6 @@
     mapscii
     tty-clock
     globe-cli
+    cava
   ];
 }
