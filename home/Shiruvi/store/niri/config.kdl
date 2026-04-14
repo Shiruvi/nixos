@@ -23,6 +23,7 @@ input {
         
     }
     warp-mouse-to-focus
+    focus-follows-mouse
 }
 
 // Monitor configuration.
