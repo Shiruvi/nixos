@@ -12,7 +12,5 @@
     kdePackages.kdenlive
     mpv
     blender
-    remmina
-    qbittorrent
   ];
 }
