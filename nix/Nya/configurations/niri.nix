@@ -1,6 +1,5 @@
 {
   pkgs,
-  inputs,
   ...
 }:
 {
@@ -12,7 +11,6 @@
     xwayland-satellite
     nautilus
     kitty
-    inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default
   ];
 
 }
