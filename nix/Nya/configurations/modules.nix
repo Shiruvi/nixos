@@ -5,7 +5,6 @@
     ./gaming.nix
     ./fish.nix
     ./niri.nix
-    ./noctalia.nix
     ./neovim.nix
     ./dpi.nix
     ./security.nix

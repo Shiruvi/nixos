@@ -1,6 +1,5 @@
 {
   pkgs,
-  inputs,
   ...
 }:
 {
@@ -11,8 +10,10 @@
   environment.systemPackages = with pkgs; [
     xwayland-satellite
     nautilus
+    mako
+    fuzzel
+    awww
     kitty
-    inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default
   ];
 
 }

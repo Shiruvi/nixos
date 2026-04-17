@@ -7,13 +7,9 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    noctalia = {
-      url = "github:noctalia-dev/noctalia-shell";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
   outputs =
-    inputs@{
+    {
       nixpkgs,
       nixpkgs-stable,
       home-manager,
@@ -27,7 +23,6 @@
         Nya = nixpkgs.lib.nixosSystem {
           specialArgs = {
             inherit system;
-            inherit inputs;
             pkgs-stable = import nixpkgs-stable {
               inherit system;
             };
@@ -40,7 +35,6 @@
         MeoW = nixpkgs.lib.nixosSystem {
           specialArgs = {
             inherit system;
-            inherit inputs;
             pkgs-stable = import nixpkgs-stable {
               inherit system;
             };
