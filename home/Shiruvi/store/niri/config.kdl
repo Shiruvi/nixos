@@ -127,7 +127,7 @@ overview {
   }
 }
 layer-rule {
-    match namespace="^noctalia-notifications$"
+    match namespace="^notifications$"
     block-out-from "screencast"
 }
 window-rule {
@@ -164,7 +164,7 @@ binds {
     // Applications
     Mod+Return                                            { spawn-sh "kitty --hold sh -c fastfetch"; }
  // sh -c "exec your-launcher"
-    Mod+Space hotkey-overlay-title="Application Launcher" { spawn-sh "noctalia-shell ipc call launcher toggle"; }
+    Mod+Space hotkey-overlay-title="Application Launcher" { spawn-sh "fuzzel"; }
     // Mod+Space hotkey-overlay-title="Application Launcher" { spawn-sh "noctalia-shell ipc call launcher toggle"; }
     Mod+B                                                 { spawn-sh "firefox"; }
     Mod+E                                                 { spawn-sh "nautilus"; }

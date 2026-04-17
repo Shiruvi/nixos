@@ -3,10 +3,23 @@
   ...
 }:
 {
+  gtk = {
+    gtk4.theme = null;
+    enable = true;
+    theme = {
+      name = "Tokyonight-Dark";
+      package = pkgs.tokyonight-gtk-theme;
+    };
+    iconTheme = {
+      name = "Dracula";
+      package = pkgs.adwaita-icon-theme;
+    };
+  };
   dconf.settings = {
     "org/gnome/desktop/interface" = {
       color-scheme = "prefer-dark";
-      gtk-theme = "Dracula";
+      gtk-theme = "Tokyonight-Dark";
+      icon-theme = "Dracula";
     };
   };
   home.sessionVariables = {
@@ -19,4 +32,8 @@
     size = 24;
     gtk.enable = true; # автоматически настроит GTK3
   };
+  home.packages = with pkgs; [
+    tokyonight-gtk-theme
+    adwaita-icon-theme
+  ];
 }
