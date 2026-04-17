@@ -3,6 +3,12 @@
   ...
 }:
 {
+  dconf.settings = {
+    "org/gnome/desktop/interface" = {
+      color-scheme = "prefer-dark";
+      gtk-theme = "Dracula";
+    };
+  };
   home.sessionVariables = {
     XCURSOR_THEME = "Bibata-Modern-Ice"; # Твое точное имя темы
     XCURSOR_SIZE = "24";

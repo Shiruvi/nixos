@@ -97,9 +97,8 @@ layout {
 
 
 // startup processes
-// spawn-at-startup "awww-daemon"
+spawn-at-startup "awww-daemon"
 // spawn-sh-at-startup "swaybg -i Pictures/Wallpapers/back -m fill"
-spawn-at-startup "noctalia-shell"
 spawn-sh-at-startup "solaar -w hide"
 // Animation settings.
 // The wiki explains how to configure individual animations:
@@ -115,7 +114,7 @@ animations {}
 // }
 // Set the regular wallpaper on the backdrop.
 layer-rule {
-  match namespace="^noctalia-wallpaper*"
+  match namespace="^awww.*"
   place-within-backdrop true
 }
 
