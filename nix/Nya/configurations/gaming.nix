@@ -20,6 +20,7 @@
 
   environment.systemPackages = with pkgs; [
     prismlauncher
+    openjdk17
     osu-lazer-bin
     retroarch-full
   ];
