@@ -143,6 +143,11 @@ window-rule {
     default-floating-position x=10 y=10 relative-to="bottom-right"
 }
 window-rule {
+    match app-id="ninjabrainbot-Main"
+    open-floating true
+    default-floating-position x=10 y=10 relative-to="top-right"
+}
+window-rule {
     match is-window-cast-target=true
     focus-ring {
         active-color "#f38ba8"
@@ -161,6 +166,9 @@ cursor {
 }
 
 binds {
+    Mod+N                                                 { spawn-sh "java -jar ~/mine/Ninjabrain-Bot-1.5.2.jar"; }
+    Mod+W                                                 { spawn-sh "niri msg action maximize-column && niri msg action center-column"; }
+    
     // Applications
     Mod+Return                                            { spawn-sh "kitty --hold sh -c fastfetch"; }
  // sh -c "exec your-launcher"
