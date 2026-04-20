@@ -11,7 +11,7 @@
       package = pkgs.tokyonight-gtk-theme;
     };
     iconTheme = {
-      name = "Dracula";
+      name = "Adwaita";
       package = pkgs.adwaita-icon-theme;
     };
   };
@@ -19,7 +19,7 @@
     "org/gnome/desktop/interface" = {
       color-scheme = "prefer-dark";
       gtk-theme = "Tokyonight-Dark";
-      icon-theme = "Dracula";
+      icon-theme = "Adwaita";
     };
   };
   home.sessionVariables = {
