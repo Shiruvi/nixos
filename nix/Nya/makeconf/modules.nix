@@ -1,5 +1,1 @@
-{
-  imports = [
-    ./onlyofficefonts.nix
-  ];
-}
+{ }
