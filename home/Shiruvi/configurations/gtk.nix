@@ -7,8 +7,8 @@
     gtk4.theme = null;
     enable = true;
     theme = {
-      name = "Tokyonight-Dark";
-      package = pkgs.tokyonight-gtk-theme;
+      name = "adw-gtk3-dark";
+      package = pkgs.adw-gtk3;
     };
     iconTheme = {
       name = "Adwaita";
@@ -18,7 +18,7 @@
   dconf.settings = {
     "org/gnome/desktop/interface" = {
       color-scheme = "prefer-dark";
-      gtk-theme = "Tokyonight-Dark";
+      gtk-theme = "adw-gtk3-dark";
       icon-theme = "Adwaita";
     };
   };
@@ -32,8 +32,4 @@
     size = 24;
     gtk.enable = true; # автоматически настроит GTK3
   };
-  home.packages = with pkgs; [
-    tokyonight-gtk-theme
-    adwaita-icon-theme
-  ];
 }
