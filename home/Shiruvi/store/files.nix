@@ -7,7 +7,6 @@
     ".config/superfile".source = ./superfile;
     ".config/fuzzel".source = ./fuzzel;
     ".config/mako".source = ./mako;
-    ".config/rofi".source = ./rofi;
     ".config/fish/config.fish".source = ./config.fish;
   };
 }

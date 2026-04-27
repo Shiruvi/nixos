@@ -10,8 +10,8 @@
   environment.systemPackages = with pkgs; [
     xwayland-satellite
     nautilus
+    fuzzel
     kitty
-    rofi
     mako
     awww
   ];
