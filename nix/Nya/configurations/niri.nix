@@ -11,7 +11,7 @@
     xwayland-satellite
     nautilus
     kitty
-    fuzzel
+    rofi
     mako
     awww
   ];

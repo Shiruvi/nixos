@@ -1,11 +1,12 @@
 {
   pkgs,
+  pkgs-stable,
   ...
 }:
 {
   environment.systemPackages = with pkgs; [
     element-desktop
-    telegram-desktop
+    pkgs-stable.telegram-desktop
     vesktop
   ];
 }
