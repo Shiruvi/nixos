@@ -12,5 +12,6 @@
     kdePackages.kdenlive
     mpv
     blender
+    onlyoffice-desktopeditors
   ];
 }

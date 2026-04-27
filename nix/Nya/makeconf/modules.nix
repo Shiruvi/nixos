@@ -1,1 +1,5 @@
-{ }
+{
+  imports = [
+    ./onlyoffice.nix
+  ];
+}
