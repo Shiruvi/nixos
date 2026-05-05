@@ -23,5 +23,7 @@
     openjdk17
     osu-lazer-bin
     retroarch-full
+    heroic
+    protonplus
   ];
 }
