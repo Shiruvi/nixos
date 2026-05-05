@@ -1,7 +1,6 @@
 {
   imports = [
     ./automount.nix
-    ./learning.nix
     ./gaming.nix
     ./fish.nix
     ./niri.nix
