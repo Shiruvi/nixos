@@ -7,6 +7,7 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    linux-wallpaper-engine.url = "github:jagrat7/linux-wallpaper-engine";
   };
   outputs =
     {
@@ -14,7 +15,7 @@
       nixpkgs-stable,
       home-manager,
       ...
-    }:
+    }@inputs:
     let
       system = "x86_64-linux";
     in
@@ -23,6 +24,7 @@
         Nya = nixpkgs.lib.nixosSystem {
           specialArgs = {
             inherit system;
+            inherit inputs;
             pkgs-stable = import nixpkgs-stable {
               inherit system;
             };
@@ -35,6 +37,7 @@
         MeoW = nixpkgs.lib.nixosSystem {
           specialArgs = {
             inherit system;
+            inherit inputs;
             pkgs-stable = import nixpkgs-stable {
               inherit system;
             };
