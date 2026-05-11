@@ -95,6 +95,12 @@ layout {
 
 }
 
+blur {
+    passes 3
+    offset 2.0
+    noise 0.02
+    saturation 1.5
+}
 
 // startup processes
 spawn-at-startup "awww-daemon"
@@ -104,6 +110,7 @@ spawn-sh-at-startup "solaar -w hide"
 // The wiki explains how to configure individual animations:
 // https://github.com/YaLTeR/niri/wiki/Configuration:-Animations
 animations {}
+
 
 // Window rules let you adjust behavior for individual windows.
 // Find more information on the wiki:
@@ -117,6 +124,21 @@ layer-rule {
   match namespace="^awww.*"
   place-within-backdrop true
 }
+layer-rule {
+    match namespace="^launcher*"
+    background-effect {
+       blur true
+       xray false
+    }
+}
+layer-rule {
+    match namespace="^notifications$"
+    background-effect {
+       blur true
+       xray false
+    }
+    block-out-from "screencast"
+}
 
 // Set transparent workspace background color so you see the backdrop at all times.
 
@@ -126,9 +148,11 @@ overview {
     off
   }
 }
-layer-rule {
-    match namespace="^notifications$"
-    block-out-from "screencast"
+window-rule {
+    match app-id="kitty"
+    background-effect {
+        blur true
+    }
 }
 window-rule {
     match app-id=r#"^org\.keepassxc\.KeePassXC$"#
