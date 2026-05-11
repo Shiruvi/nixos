@@ -1,6 +1,5 @@
 {
   pkgs,
-  inputs,
   ...
 }:
 {
@@ -23,7 +22,5 @@
     corefonts
     # Other fonts
     adwaita-fonts
-    #wallpaperengine
-    inputs.linux-wallpaper-engine.packages.${pkgs.stdenv.hostPlatform.system}.default
   ];
 }
