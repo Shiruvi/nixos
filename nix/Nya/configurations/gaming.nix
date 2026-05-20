@@ -25,5 +25,6 @@
     retroarch-full
     heroic
     protonplus
+    mangohud
   ];
 }
