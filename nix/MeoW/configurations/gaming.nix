@@ -18,6 +18,7 @@
   };
   environment.systemPackages = with pkgs; [
     prismlauncher
+    gamescope
     openjdk17
     osu-lazer-bin
     retroarch-full
