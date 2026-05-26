@@ -10,7 +10,7 @@
     pavucontrol
     krita
     kdePackages.kdenlive
-    mpv
+    losslesscut-bin
     blender
     onlyoffice-desktopeditors
   ];

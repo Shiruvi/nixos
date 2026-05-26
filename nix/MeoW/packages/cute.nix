@@ -8,13 +8,13 @@
     lsd
     bat
     cmatrix
-    kittysay
     genact
-    cool-retro-term
     lavat
-    mapscii
     tty-clock
     globe-cli
     cava
+    duf
+    nsxiv
+    mpv
   ];
 }
