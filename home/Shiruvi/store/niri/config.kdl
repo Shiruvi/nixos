@@ -249,7 +249,7 @@ binds {
     Mod+Z                                                 { spawn-sh "nirius toggle-follow-mode"; }
     Mod+Q                                                 { close-window; }
     Mod+T                                                 { toggle-window-floating; }
-    Mod+Shift+T                                           { switch-focus-between-floating-and-tiling; }
+    Mod+Y                                           { switch-focus-between-floating-and-tiling; }
     Mod+M                                                 { maximize-column; }
     Mod+F                                                 { fullscreen-window; }
     Mod+Shift+F                                           { toggle-windowed-fullscreen; }
