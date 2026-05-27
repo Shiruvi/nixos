@@ -208,7 +208,7 @@ binds {
     Mod+E                                                 { spawn "nautilus"; }
     Mod+Alt+T                                             { spawn-sh "nirius focus --app-id org.telegram.desktop || exec Telegram"; }
     Mod+Alt+D                                             { spawn-sh "nirius focus-or-spawn --app-id vesktop"; }
-    Mod+Atl+O                                             { spawn "onlyoffice-desktopeditors"; }
+    Mod+Alt+O                                             { spawn "onlyoffice-desktopeditors"; }
     // Mod+V                                                 { spawn-sh "noctalia-shell ipc call launcher clipboard"; }
 
     Mod+Shift+E                                           { quit skip-confirmation=true; }
@@ -244,8 +244,9 @@ binds {
     Mod+WheelScrollLeft                                   { focus-column-left-or-last; }
     Mod+C                                                 { center-column; }
     Mod+Shift+C                                           { center-visible-columns; }
-    Mod+X                                                 { spawn-sh "toggle-mark"; }
+    Mod+X                                                 { spawn-sh "nirius toggle-mark"; }
     Mod+Shift+X                                           { toggle-column-tabbed-display; }
+    Mod+Z                                                 { spawn-sh "nirius toggle-follow-mode"; }
     Mod+Q                                                 { close-window; }
     Mod+T                                                 { switch-focus-between-floating-and-tiling; }
     Mod+Shift+T                                           { toggle-window-floating; }
