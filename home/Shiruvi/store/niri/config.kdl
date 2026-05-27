@@ -105,6 +105,7 @@ blur {
 
 // startup processes
 spawn-at-startup "awww-daemon"
+spawn-at-startup "niriusd"
 // spawn-sh-at-startup "swaybg -i Pictures/Wallpapers/back -m fill"
 spawn-sh-at-startup "solaar -w hide"
 // Animation settings.
@@ -198,15 +199,17 @@ binds {
     Mod+W                                                 { spawn-sh "niri msg action maximize-column && niri msg action center-column"; }
     
     // Applications
-    Mod+Return                                            { spawn-sh "kitty --hold sh -c fastfetch"; }
+    Mod+Return                                            { spawn "kitty"; }
+    Mod+Shift+Return                                      { spawn-sh "kitty --hold sh -c fastfetch"; }
  // sh -c "exec your-launcher"
     Mod+Space hotkey-overlay-title="Application Launcher" { spawn-sh "fuzzel"; }
     // Mod+Space hotkey-overlay-title="Application Launcher" { spawn-sh "noctalia-shell ipc call launcher toggle"; }
-    Mod+B                                                 { spawn-sh "firefox"; }
-    Mod+E                                                 { spawn-sh "nautilus"; }
-    Mod+Alt+T                                             { spawn "Telegram"; }
-    Mod+Alt+D                                             { spawn "vesktop"; }
-    Mod+V                                                 { spawn-sh "noctalia-shell ipc call launcher clipboard"; }
+    Mod+B                                                 { spawn "firefox"; }
+    Mod+E                                                 { spawn "nautilus"; }
+    Mod+Alt+T                                             { spawn-sh "nirius focus --app-id org.telegram.desktop || exec Telegram"; }
+    Mod+Alt+D                                             { spawn-sh "nirius focus-or-spawn --app-id vesktop"; }
+    Mod+Atl+O                                             { spawn "onlyoffice-desktopeditors"; }
+    // Mod+V                                                 { spawn-sh "noctalia-shell ipc call launcher clipboard"; }
 
     Mod+Shift+E                                           { quit skip-confirmation=true; }
 
@@ -241,7 +244,8 @@ binds {
     Mod+WheelScrollLeft                                   { focus-column-left-or-last; }
     Mod+C                                                 { center-column; }
     Mod+Shift+C                                           { center-visible-columns; }
-    Mod+X                                                 { toggle-column-tabbed-display; }
+    Mod+X                                                 { spawn-sh "toggle-mark"; }
+    Mod+Shift+X                                           { toggle-column-tabbed-display; }
     Mod+Q                                                 { close-window; }
     Mod+T                                                 { switch-focus-between-floating-and-tiling; }
     Mod+Shift+T                                           { toggle-window-floating; }
@@ -273,6 +277,11 @@ binds {
     Mod+Comma                                             { move-column-to-workspace-up; }
     Mod+Shift+Period                                      { move-workspace-down; }
     Mod+Shift+Comma                                       { move-workspace-up; }
+    Mod+Grave                                             { spawn-sh "nirius focus-marked"; }
+    Mod+Shift+Grave                                       { focus-window-up-or-bottom; }
+    Mod+S                                                 { spawn-sh "nirius scratchpad-show"; }
+    Mod+Shift+S                                           { spawn-sh "nirius scratchpad-toggle"; }
+    Mod+Alt+S                                             { spawn-sh "nirius scratchpad-show-all"; }
 
     // Workspaces
     Mod+Alt+Down                                          { move-workspace-to-monitor-down; }
