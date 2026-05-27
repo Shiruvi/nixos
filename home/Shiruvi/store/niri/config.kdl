@@ -248,8 +248,8 @@ binds {
     Mod+Shift+X                                           { toggle-column-tabbed-display; }
     Mod+Z                                                 { spawn-sh "nirius toggle-follow-mode"; }
     Mod+Q                                                 { close-window; }
-    Mod+T                                                 { switch-focus-between-floating-and-tiling; }
-    Mod+Shift+T                                           { toggle-window-floating; }
+    Mod+T                                                 { toggle-window-floating; }
+    Mod+Shift+T                                           { switch-focus-between-floating-and-tiling; }
     Mod+M                                                 { maximize-column; }
     Mod+F                                                 { fullscreen-window; }
     Mod+Shift+F                                           { toggle-windowed-fullscreen; }
