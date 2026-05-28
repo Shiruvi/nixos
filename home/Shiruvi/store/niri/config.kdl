@@ -207,7 +207,7 @@ binds {
     Mod+B                                                 { spawn "firefox"; }
     Mod+E                                                 { spawn "nautilus"; }
     Mod+Alt+T                                             { spawn-sh "nirius focus --app-id org.telegram.desktop || exec Telegram"; }
-    Mod+Alt+D                                             { spawn-sh "nirius focus-or-spawn --app-id vesktop"; }
+    Mod+Alt+D                                             { spawn-sh "nirius focus-or-spawn --app-id vesktop || exec vesktop"; }
     Mod+Alt+O                                             { spawn "onlyoffice-desktopeditors"; }
     // Mod+V                                                 { spawn-sh "noctalia-shell ipc call launcher clipboard"; }
 
