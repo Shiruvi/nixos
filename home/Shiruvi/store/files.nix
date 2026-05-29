@@ -7,6 +7,7 @@
     ".config/superfile".source = ./superfile;
     ".config/fuzzel".source = ./fuzzel;
     ".config/mako".source = ./mako;
+    ".config/btop/themes/dracula.theme".source = ./dracula.theme;
     ".config/fish/config.fish".source = ./config.fish;
   };
 }
