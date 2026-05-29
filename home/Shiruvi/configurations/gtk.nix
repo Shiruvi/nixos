@@ -4,7 +4,6 @@
 }:
 {
   gtk = {
-    gtk4.theme = null;
     enable = true;
     theme = {
       name = "adw-gtk3-dark";
@@ -13,6 +12,17 @@
     iconTheme = {
       name = "Adwaita";
       package = pkgs.adwaita-icon-theme;
+    };
+    gtk4 = {
+      enable = true;
+      theme = {
+        name = "adw-gtk3-dark";
+        package = pkgs.adw-gtk3;
+      };
+      iconTheme = {
+        name = "Adwaita";
+        package = pkgs.adwaita-icon-theme;
+      };
     };
   };
   dconf.settings = {

@@ -16,5 +16,6 @@
     duf
     nsxiv
     mpv
+    eza
   ];
 }
