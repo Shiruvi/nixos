@@ -13,5 +13,6 @@
     losslesscut-bin
     blender
     onlyoffice-desktopeditors
+    obsidian
   ];
 }
