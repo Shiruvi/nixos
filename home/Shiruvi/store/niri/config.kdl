@@ -105,7 +105,7 @@ blur {
 
 // startup processes
 spawn-at-startup "awww-daemon"
-spawn-at-startup "niriusd"
+spawn-at-startup "fcitx5 -d"
 // spawn-sh-at-startup "swaybg -i Pictures/Wallpapers/back -m fill"
 spawn-sh-at-startup "solaar -w hide"
 // Animation settings.

@@ -11,7 +11,6 @@
     xwayland-satellite
     nautilus
     fuzzel
-    nirius
     kitty
     mako
     awww
