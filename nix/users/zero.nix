@@ -1,0 +1,21 @@
+{
+  pkgs,
+  ...
+}:
+{
+  users.users.zero = {
+    isNormalUser = true;
+    shell = pkgs.fish;
+    extraGroups = [
+      "audio"
+      "wheel"
+      "input"
+      "networkmanager"
+      "storage"
+      "disk"
+      "uinput"
+      "wireshark"
+    ];
+  };
+  nix.settings.trusted-users = [ "zero" ];
+}

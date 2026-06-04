@@ -1,0 +1,21 @@
+{
+  pkgs,
+  ...
+}:
+{
+  environment.systemPackages = with pkgs; [
+    fastfetch
+    lsd
+    bat
+    cmatrix
+    genact
+    lavat
+    tty-clock
+    globe-cli
+    cava
+    duf
+    nsxiv
+    mpv
+    eza
+  ];
+}

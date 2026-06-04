@@ -1,0 +1,31 @@
+{
+  pkgs,
+  ...
+}:
+{
+  services.power-profiles-daemon = {
+    enable = true;
+    package = pkgs.power-profiles-daemon;
+  };
+  services.upower.enable = true;
+  programs = {
+    steam = {
+      enable = true;
+    };
+    gamemode = {
+      enable = true;
+      enableRenice = true;
+    };
+  };
+
+  environment.systemPackages = with pkgs; [
+    prismlauncher
+    gamescope
+    openjdk17
+    osu-lazer-bin
+    retroarch-full
+    heroic
+    protonplus
+    mangohud
+  ];
+}

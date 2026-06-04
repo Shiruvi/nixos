@@ -44,6 +44,18 @@
             ./licenses/MeoW.nix
           ];
         };
+        zer0 = nixpkgs.lib.nixosSystem {
+          specialArgs = {
+            inherit system;
+            pkgs-stable = import nixpkgs-stable {
+              inherit system;
+            };
+          };
+          modules = [
+            ./nix/zer0.nix
+            ./licenses/zer0.nix
+          ];
+        };
       };
       homeConfigurations.Shiruvi = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.${system};
