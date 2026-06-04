@@ -196,6 +196,7 @@ cursor {
 
 binds {
     Mod+N                                                 { spawn-sh "java -jar ~/mine/Ninjabrain-Bot-1.5.2.jar"; }
+    Mod+J                                                 { spawn "fcitx5-remote" "-t"; }
     Mod+W                                                 { spawn-sh "niri msg action maximize-column && niri msg action center-column"; }
     
     // Applications
