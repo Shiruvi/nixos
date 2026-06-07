@@ -14,5 +14,6 @@
     blender
     onlyoffice-desktopeditors
     obsidian
+    helvum
   ];
 }

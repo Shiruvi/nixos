@@ -6,7 +6,7 @@
 {
   programs.amnezia-vpn = {
     enable = true;
-    package = pkgs-stable.amnezia-vpn;
+    package = pkgs.amnezia-vpn;
   };
   environment.systemPackages = with pkgs; [
     nftables

@@ -22,5 +22,11 @@
     corefonts
     # Other fonts
     adwaita-fonts
+    migu
+    noto-fonts
+    noto-fonts-cjk-sans
+    noto-fonts-cjk-serif
+    noto-fonts-cjk-sans-static
+    noto-fonts-cjk-serif-static
   ];
 }
