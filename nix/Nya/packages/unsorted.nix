@@ -15,5 +15,6 @@
     onlyoffice-desktopeditors
     obsidian
     helvum
+    anki-bin
   ];
 }
