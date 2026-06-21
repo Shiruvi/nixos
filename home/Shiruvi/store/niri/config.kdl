@@ -206,9 +206,9 @@ binds {
     Mod+Space hotkey-overlay-title="Application Launcher" { spawn-sh "fuzzel"; }
     // Mod+Space hotkey-overlay-title="Application Launcher" { spawn-sh "noctalia-shell ipc call launcher toggle"; }
     Mod+B                                                 { spawn "firefox"; }
-    Mod+E                                                 { spawn "nautilus"; }
-    Mod+Alt+T                                             { spawn-sh "nirius focus --app-id org.telegram.desktop || exec Telegram"; }
-    Mod+Alt+D                                             { spawn-sh "nirius focus --app-id vesktop || exec vesktop"; }
+    Mod+E                                                 { spawn-sh "nautilus"; }
+    Mod+Alt+T                                             { spawn-sh "exec Telegram"; }
+    Mod+Alt+D                                             { spawn-sh "exec vesktop"; }
     Mod+Alt+O                                             { spawn "onlyoffice-desktopeditors"; }
     // Mod+V                                                 { spawn-sh "noctalia-shell ipc call launcher clipboard"; }
 
@@ -245,9 +245,9 @@ binds {
     Mod+WheelScrollLeft                                   { focus-column-left-or-last; }
     Mod+C                                                 { center-column; }
     Mod+Shift+C                                           { center-visible-columns; }
-    Mod+X                                                 { spawn-sh "nirius toggle-mark"; }
+    // Mod+X                                                 { spawn-sh "nirius toggle-mark"; }
     Mod+Shift+X                                           { toggle-column-tabbed-display; }
-    Mod+Z                                                 { spawn-sh "nirius toggle-follow-mode"; }
+    // Mod+Z                                                 { spawn-sh "nirius toggle-follow-mode"; }
     Mod+Q                                                 { close-window; }
     Mod+T                                                 { toggle-window-floating; }
     Mod+Y                                           { switch-focus-between-floating-and-tiling; }
@@ -279,11 +279,11 @@ binds {
     Mod+Comma                                             { move-column-to-workspace-up; }
     Mod+Shift+Period                                      { move-workspace-down; }
     Mod+Shift+Comma                                       { move-workspace-up; }
-    Mod+Grave                                             { spawn-sh "nirius focus-marked"; }
+    // Mod+Grave                                             { spawn-sh "nirius focus-marked"; }
     Mod+Shift+Grave                                       { focus-window-up-or-bottom; }
-    Mod+S                                                 { spawn-sh "nirius scratchpad-show"; }
-    Mod+Shift+S                                           { spawn-sh "nirius scratchpad-toggle"; }
-    Mod+Alt+S                                             { spawn-sh "nirius scratchpad-show-all"; }
+    // Mod+S                                                 { spawn-sh "nirius scratchpad-show"; }
+    // Mod+Shift+S                                           { spawn-sh "nirius scratchpad-toggle"; }
+    // Mod+Alt+S                                             { spawn-sh "nirius scratchpad-show-all"; }
 
     // Workspaces
     Mod+Alt+Down                                          { move-workspace-to-monitor-down; }
