@@ -7,5 +7,6 @@
     vim
     nix-tree
     pciutils
+    usbutils
   ];
 }
