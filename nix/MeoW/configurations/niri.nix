@@ -11,7 +11,6 @@
     xwayland-satellite
     nautilus
     fuzzel
-    vicinae
     mako
     awww
     kitty

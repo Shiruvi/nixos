@@ -13,6 +13,8 @@
     losslesscut-bin
     blender
     onlyoffice-desktopeditors
+    typst
+    typstwrighter
     obsidian
     helvum
     anki-bin

@@ -205,7 +205,7 @@ binds {
  // sh -c "exec your-launcher"
     Mod+Space hotkey-overlay-title="Application Launcher" { spawn-sh "fuzzel"; }
     // Mod+Space hotkey-overlay-title="Application Launcher" { spawn-sh "noctalia-shell ipc call launcher toggle"; }
-    Mod+B                                                 { spawn "firefox"; }
+    Mod+B                                                 { spawn "floorp"; }
     Mod+E                                                 { spawn-sh "nautilus"; }
     Mod+Alt+T                                             { spawn-sh "exec Telegram"; }
     Mod+Alt+D                                             { spawn-sh "exec vesktop"; }
