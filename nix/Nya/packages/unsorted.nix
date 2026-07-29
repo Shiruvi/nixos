@@ -11,7 +11,7 @@
     krita
     kdePackages.kdenlive
     losslesscut-bin
-    blender
+    openscad
     onlyoffice-desktopeditors
     obsidian
     helvum
