@@ -21,5 +21,9 @@
     cargo
     clang-tools
     cmake-language-server
+    prettypst
+    tinymist
+    nil
+    openscad-lsp
   ];
 }
