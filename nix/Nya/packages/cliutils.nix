@@ -9,6 +9,7 @@
     enableFishIntegration = true;
   };
   environment.systemPackages = with pkgs; [
+    imagemagick
     speedtest
     btop
     brightnessctl

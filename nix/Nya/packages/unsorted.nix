@@ -13,6 +13,7 @@
     losslesscut-bin
     openscad
     onlyoffice-desktopeditors
+    typst
     obsidian
     helvum
     anki-bin
