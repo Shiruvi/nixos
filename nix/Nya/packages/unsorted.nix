@@ -17,5 +17,6 @@
     obsidian
     helvum
     anki-bin
+    ida-free
   ];
 }
