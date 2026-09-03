@@ -37,6 +37,7 @@
     XCURSOR_SIZE = "24";
   };
   home.pointerCursor = {
+    enable = true;
     name = "Bibata-Modern-Ice"; # точное имя темы внутри пакета
     package = pkgs.bibata-cursors;
     size = 24;
