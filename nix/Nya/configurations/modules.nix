@@ -9,7 +9,7 @@
     ./security.nix
     ./develop.nix
     # ./bluetooth.nix
-    # ./virt.nix
+    ./virt.nix
     ./otd.nix
   ];
 }
