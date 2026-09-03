@@ -14,6 +14,7 @@
     python3
     rustc
     clang
+    nil
     yarn
     gcc
     gnumake

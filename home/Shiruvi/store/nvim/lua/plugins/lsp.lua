@@ -2,22 +2,14 @@ return {
   {
     "AstroNvim/astrolsp",
     opts = {
-      servers = { "clangd", "cmake-language-server", "tinymist", "openscad-lsp", "nil" },
+      servers = { "clangd", "nil_ls" },
       config = {
         clangd = {
           cmd = { "clangd" },
         },
-        cmake-language-server = {
-          cmd = { "cmake-language-server" },
-        },
-        tinymist = {
-          cmd = { "tinymist" },
-        },
-        nil = {
+
+        nil_ls = {
           cmd = { "nil" },
-        },
-        openscad-lsp = {
-          cmd = { "openscad-lsp" },
         },
       },
     },
