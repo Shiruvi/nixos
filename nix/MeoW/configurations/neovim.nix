@@ -14,6 +14,7 @@
     python3
     rustc
     clang
+    nil
     yarn
     gcc
     gnumake
@@ -21,9 +22,5 @@
     cargo
     clang-tools
     cmake-language-server
-    prettypst
-    tinymist
-    nil
-    openscad-lsp
   ];
 }
