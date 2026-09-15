@@ -3,9 +3,9 @@
   ...
 }:
 {
-  virtualisation.libvirtd.enable = true;
-  programs.virt-manager = {
+  virtualisation.virtualbox.host = {
     enable = true;
-    package = pkgs.virt-manager;
+    package = pkgs.virtualbox;
+    enableExtensionPack = true;
   };
 }
