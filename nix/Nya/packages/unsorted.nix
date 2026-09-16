@@ -17,10 +17,5 @@
     obsidian
     helvum
     anki-bin
-    ida-free
   ];
-  programs.wireshark = {
-    enable = true;
-    package = pkgs.wireshark;
-  };
 }
