@@ -1,5 +1,6 @@
 {
   pkgs,
+  pkgs-stable,
   ...
 }:
 {
@@ -8,7 +9,7 @@
     useNautilus = true;
   };
   environment.systemPackages = with pkgs; [
-    xwayland-satellite
+    pkgs-stable.xwayland-satellite
     nautilus
     fuzzel
     kitty
