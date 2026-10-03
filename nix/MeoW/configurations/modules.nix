@@ -10,6 +10,7 @@
     ./dpi.nix
     ./security.nix
     ./develop.nix
+    ./virt.nix
     ./otd.nix
   ];
 }
