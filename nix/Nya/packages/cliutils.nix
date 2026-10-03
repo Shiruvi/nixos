@@ -10,6 +10,7 @@
   };
   environment.systemPackages = with pkgs; [
     imagemagick
+    nmap
     speedtest
     btop
     brightnessctl
