@@ -9,7 +9,7 @@
     useNautilus = true;
   };
   environment.systemPackages = with pkgs; [
-    pkgs-stable.xwayland-satellite
+    xwayland-satellite
     nautilus
     fuzzel
     mako
