@@ -16,6 +16,7 @@
     typst
     obsidian
     helvum
+    qalculate-gtk
     anki-bin
   ];
 }
