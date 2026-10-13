@@ -26,5 +26,6 @@
     lazygit
     superfile
     yt-dlp
+    exiftool
   ];
 }
