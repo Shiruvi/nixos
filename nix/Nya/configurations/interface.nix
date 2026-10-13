@@ -13,7 +13,7 @@
     fluent-icon-theme
     # утилиты
     konsave # сохранение/применение профилей Plasma
-    (writeShellScriptBin "style-switch" (builtins.readFile ./style-switch.sh))
+    (writeShellScriptBin "style-switch" (builtins.readFile ../../../scripts/style-switch.sh))
   ];
 
   fonts.packages = with pkgs; [
