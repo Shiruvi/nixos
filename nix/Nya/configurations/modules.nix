@@ -8,7 +8,6 @@
     ./dpi.nix
     ./security.nix
     ./develop.nix
-    ./interface.nix
     # ./bluetooth.nix
     ./virt.nix
     ./otd.nix
