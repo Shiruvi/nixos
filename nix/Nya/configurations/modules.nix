@@ -8,8 +8,8 @@
     ./dpi.nix
     ./security.nix
     ./develop.nix
+    ./kde.nix
     # ./bluetooth.nix
-    ./virt.nix
     ./otd.nix
   ];
 }
