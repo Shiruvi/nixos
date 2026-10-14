@@ -3,7 +3,6 @@
   ...
 }:
 {
-  security.polkit.enable = true;
   environment.systemPackages = with pkgs; [
     polkit_gnome
   ];
@@ -19,5 +18,10 @@
       RestartSec = 1;
       TimeoutStopSec = 10;
     };
+  };
+  security = {
+    doas.enable = true;
+    polkit.enable = true;
+    sudo.enable = false;
   };
 }
