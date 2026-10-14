@@ -13,6 +13,12 @@
       name = "Adwaita";
       package = pkgs.adwaita-icon-theme;
     };
+    gtk3.extraConfig = {
+      gtk-decoration-layout = "";
+    };
+    gtk4.extraConfig = {
+      gtk-decoration-layout = "";
+    };
     gtk4 = {
       enable = true;
       theme = {
@@ -26,6 +32,9 @@
     };
   };
   dconf.settings = {
+    "org/gnome/desktop/wm/preferences" = {
+      button-layout = ""; # Убирает кнопки из заголовка
+    };
     "org/gnome/desktop/interface" = {
       color-scheme = "prefer-dark";
       gtk-theme = "adw-gtk3-dark";
