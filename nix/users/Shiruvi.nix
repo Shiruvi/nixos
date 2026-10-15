@@ -14,7 +14,6 @@
       "storage"
       "disk"
       "uinput"
-      "wireshark"
     ];
   };
   nix.settings.trusted-users = [ "Shiruvi" ];
