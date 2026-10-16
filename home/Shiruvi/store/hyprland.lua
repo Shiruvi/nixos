@@ -1,19 +1,36 @@
--- ~/.config/hypr/hyprland.lua
--- Hyprland config ported from my niri config
--- (Hyprland 0.55+, Lua config, built-in scrolling layout).
---
--- Dotfiles: https://github.com/Shiruvi/nixos
--- Wiki:     https://wiki.hypr.land/configuring/
---
--- Markers:  [~] approximate equivalent,  [x] no equivalent in Hyprland.
--- Hotkey cheat sheet: Mod+Shift+/  (requires fuzzel; searchable list).
+-- ┌──────────────────────────────────────────────────────────────────────┐
+-- │  Hyprland — ~/.config/hypr/hyprland.lua                              │
+-- │  Hyprland 0.55+ (Lua config, built-in scrolling layout)              │
+-- │  + caelestia-shell (bar, launcher, notifications, OSD, lock, etc.)   │
+-- │                                                                      │
+-- │  Author:   Shiruvi                                                   │
+-- │  Repo:     https://github.com/Shiruvi/nixos                          │
+-- │  License:  GNU GPL v3.0 or later                                     │
+-- │                                                                      │
+-- │  Hyprland wiki:   https://wiki.hypr.land/configuring/                │
+-- │  Caelestia shell: https://github.com/caelestia-dots/shell            │
+-- │  Markers:  [~] approximate niri equivalent, [x] no equivalent.       │
+-- │  Hotkey cheat sheet:  Super+Shift+/                                  │
+-- └──────────────────────────────────────────────────────────────────────┘
 
 local mainMod = "SUPER"
+local HOME    = os.getenv("HOME")
 
-----------------------------------------------------------------------
--- MONITORS
-----------------------------------------------------------------------
--- List outputs: `hyprctl monitors all`
+-- ════════════════════════════════════════════════════════════════════════
+--  COLOUR SCHEME
+--  caelestia-cli writes hypr/scheme/current.lua on every wallpaper or
+--  scheme change. Before the first change the file does not exist yet,
+--  so fall back to fixed colours.
+-- ════════════════════════════════════════════════════════════════════════
+local ok, scheme = pcall(dofile, HOME .. "/.config/hypr/scheme/current.lua")
+if not ok or type(scheme) ~= "table" then
+    scheme = { primary = "125763", onSurfaceVariant = "515752" }
+end
+
+-- ════════════════════════════════════════════════════════════════════════
+--  MONITORS
+--  List outputs: `hyprctl monitors all`
+-- ════════════════════════════════════════════════════════════════════════
 hl.monitor({ output = "eDP-1",    mode = "1920x1080@60",     position = "0x0",    scale = 1, transform = 0 })
 hl.monitor({ output = "DP-1",     mode = "5120x1440@119.97", position = "0x1440", transform = 0 })
 hl.monitor({ output = "DP-2",                                position = "2560x0" })
@@ -22,23 +39,37 @@ hl.monitor({ output = "HDMI-A-1",                            position = "640x360
 -- Any other monitor: preferred mode, placed automatically
 hl.monitor({ output = "", mode = "preferred", position = "auto", scale = "auto" })
 
-----------------------------------------------------------------------
--- ENVIRONMENT
-----------------------------------------------------------------------
+-- ════════════════════════════════════════════════════════════════════════
+--  ENVIRONMENT
+--  Locale and Qt theme are set system-wide in NixOS (i18n.defaultLocale,
+--  environment.sessionVariables); only compositor-specific bits live here.
+-- ════════════════════════════════════════════════════════════════════════
 hl.env("XCURSOR_THEME", "Bibata-Modern-Ice")
 hl.env("XCURSOR_SIZE", "24")
 hl.env("HYPRCURSOR_THEME", "Bibata-Modern-Ice")
 hl.env("HYPRCURSOR_SIZE", "24")
-hl.env("HYPRSHOT_DIR", os.getenv("HOME") .. "/Pictures/Screenshots")
+hl.env("QT_WAYLAND_DISABLE_WINDOWDECORATION", "1")
+-- Icon theme for Quickshell (caelestia-shell): it calls QIcon::setThemeName
+-- with this value at startup, independent of the Qt platform theme.
+hl.env("QS_ICON_THEME", "Fluent-dark")
+hl.env("ELECTRON_OZONE_PLATFORM_HINT", "auto")
 -- fcitx5 on Wayland (if not already set elsewhere):
 -- hl.env("XMODIFIERS", "@im=fcitx")
 -- hl.env("QT_IM_MODULE", "fcitx")
 
-----------------------------------------------------------------------
--- AUTOSTART
-----------------------------------------------------------------------
+-- ════════════════════════════════════════════════════════════════════════
+--  AUTOSTART
+-- ════════════════════════════════════════════════════════════════════════
 hl.on("hyprland.start", function()
-    hl.exec_cmd("awww-daemon")
+    -- Caelestia shell. Started through the CLI so the Nix wrapper
+    -- (`caelestia-shell`) sets FONTCONFIG_FILE for its icon fonts.
+    -- It also draws the wallpaper: set it with `caelestia wallpaper -f <file>`.
+    hl.exec_cmd("caelestia shell -d")
+
+    -- Clipboard history for `caelestia clipboard` (Super+V)
+    hl.exec_cmd("wl-paste --type text --watch cliphist store")
+    hl.exec_cmd("wl-paste --type image --watch cliphist store")
+
     hl.exec_cmd("fcitx5 -d")
     hl.exec_cmd("solaar -w hide")
     hl.exec_cmd("hyprctl setcursor Bibata-Modern-Ice 24")
@@ -46,9 +77,9 @@ hl.on("hyprland.start", function()
     hl.dispatch(hl.dsp.focus({ monitor = "DP-1" }))
 end)
 
-----------------------------------------------------------------------
--- INPUT
-----------------------------------------------------------------------
+-- ════════════════════════════════════════════════════════════════════════
+--  INPUT
+-- ════════════════════════════════════════════════════════════════════════
 hl.config({
     input = {
         kb_layout          = "us,ru",
@@ -79,9 +110,9 @@ hl.config({
 
 -- [x] track-layout "window" (per-window keyboard layout) has no built-in equivalent.
 
-----------------------------------------------------------------------
--- LOOK AND LAYOUT
-----------------------------------------------------------------------
+-- ════════════════════════════════════════════════════════════════════════
+--  LOOK AND LAYOUT
+-- ════════════════════════════════════════════════════════════════════════
 hl.config({
     general = {
         layout      = "scrolling",
@@ -89,8 +120,9 @@ hl.config({
         gaps_out    = 10,
         border_size = 2,   -- plays the role of niri's focus-ring
         col = {
-            active_border   = "rgb(125763)",
-            inactive_border = "rgb(515752)",
+            -- Follows the wallpaper (see COLOUR SCHEME above)
+            active_border   = "rgb(" .. scheme.primary .. ")",
+            inactive_border = "rgba(" .. scheme.onSurfaceVariant .. "40)",
         },
     },
 
@@ -119,6 +151,8 @@ hl.config({
         force_default_wallpaper = 0,
         disable_hyprland_logo   = true,
     },
+
+    animations = { enabled = true },
 })
 
 -- Default column width 0.25 on the ultrawide DP-1
@@ -132,9 +166,29 @@ hl.window_rule({
 hl.gesture({ fingers = 3, direction = "horizontal", action = "scroll_move" })
 hl.gesture({ fingers = 3, direction = "vertical",   action = "workspace" })
 
-----------------------------------------------------------------------
--- WINDOW AND LAYER RULES
-----------------------------------------------------------------------
+-- ════════════════════════════════════════════════════════════════════════
+--  ANIMATIONS
+--  Workspaces slide vertically, like niri's workspace strip.
+-- ════════════════════════════════════════════════════════════════════════
+hl.curve("standard",        { type = "bezier", points = { { 0.2, 0 },    { 0, 1 } } })
+hl.curve("emphasizedDecel", { type = "bezier", points = { { 0.05, 0.7 }, { 0.1, 1 } } })
+hl.curve("emphasizedAccel", { type = "bezier", points = { { 0.3, 0 },    { 0.8, 0.15 } } })
+
+hl.animation({ leaf = "windowsIn",   enabled = true, speed = 5, bezier = "emphasizedDecel" })
+hl.animation({ leaf = "windowsOut",  enabled = true, speed = 3, bezier = "emphasizedAccel" })
+hl.animation({ leaf = "windowsMove", enabled = true, speed = 6, bezier = "standard" })
+hl.animation({ leaf = "layersIn",    enabled = true, speed = 5, bezier = "emphasizedDecel", style = "slide" })
+hl.animation({ leaf = "layersOut",   enabled = true, speed = 4, bezier = "emphasizedAccel", style = "slide" })
+hl.animation({ leaf = "fade",        enabled = true, speed = 6, bezier = "standard" })
+hl.animation({ leaf = "border",      enabled = true, speed = 6, bezier = "standard" })
+-- Regular workspaces: vertical slide (the default "slide" is horizontal)
+hl.animation({ leaf = "workspaces",       enabled = true, speed = 5, bezier = "standard",        style = "slidevert" })
+-- Special workspace (Super+S): slides in vertically with a fade
+hl.animation({ leaf = "specialWorkspace", enabled = true, speed = 4, bezier = "emphasizedDecel", style = "slidefadevert 15%" })
+
+-- ════════════════════════════════════════════════════════════════════════
+--  WINDOW AND LAYER RULES
+-- ════════════════════════════════════════════════════════════════════════
 hl.window_rule({
     name            = "keepassxc-hide-cast",
     match           = { class = [[^org\.keepassxc\.KeePassXC$]] },
@@ -158,14 +212,16 @@ hl.window_rule({
 
 -- [x] is-window-cast-target (highlighting the window being cast) has no equivalent.
 
-hl.layer_rule({ match = { namespace = "^launcher$" },      blur = true })
-hl.layer_rule({ match = { namespace = "^notifications$" }, blur = true, no_screen_share = true })
+-- fuzzel (cheat sheet, clipboard, emoji) uses the "launcher" namespace
+hl.layer_rule({ match = { namespace = "^launcher$" }, blur = true })
 
-----------------------------------------------------------------------
--- HELPERS
-----------------------------------------------------------------------
+-- ════════════════════════════════════════════════════════════════════════
+--  HELPERS
+-- ════════════════════════════════════════════════════════════════════════
 local function dispatch(d) hl.dispatch(d) end
 local function layout(msg) return hl.dsp.layout(msg) end
+-- Caelestia global shortcut (registered by the shell, see `hyprctl globalshortcuts`)
+local function shell(name) return hl.dsp.global("caelestia:" .. name) end
 
 -- Number of columns on the window's workspace
 local function column_count(w)
@@ -239,6 +295,14 @@ local function switch_float_tile()
     end
 end
 
+-- Show/hide the special workspace (scratchpad): closes whichever special
+-- workspace is open, otherwise opens "special".
+local function toggle_special()
+    local active = hl.get_active_special_workspace()
+    local target = active and active.name:gsub("^special:", "") or "special"
+    dispatch(hl.dsp.workspace.toggle_special(target))
+end
+
 -- DPMS through a timer (as the wiki recommends)
 local function dpms(action)
     return function()
@@ -248,22 +312,21 @@ local function dpms(action)
     end
 end
 
--- Equivalent of niri's `quit` with confirmation: a small fuzzel Yes/No menu
-local EXIT_CMD = [[printf 'No\nYes, quit\n' | fuzzel --dmenu --prompt 'Quit Hyprland? ' --lines 2 --width 30 ]]
-    .. [[| grep -q '^Yes' && { command -v hyprshutdown >/dev/null 2>&1 && hyprshutdown || hyprctl dispatch 'hl.dsp.exit()'; }]]
-
 -- Equivalent of toggle-keyboard-shortcuts-inhibit: forbid/allow the active
 -- window to grab compositor hotkeys (games, VMs, remote desktop).
 local function toggle_shortcuts_inhibit()
     hl.dispatch(hl.dsp.window.set_prop({ prop = "no_shortcuts_inhibit", value = "toggle" }))
 end
 
-----------------------------------------------------------------------
--- CHEAT SHEET
--- Every bind with a description shows up in `hyprctl binds` and in the
--- cheat sheet opened with Mod+Shift+/ (a searchable list in fuzzel).
-----------------------------------------------------------------------
-local CATEGORIES = { "System", "Applications", "Windows and columns", "Navigation", "Workspaces", "Screenshots" }
+-- ════════════════════════════════════════════════════════════════════════
+--  CHEAT SHEET
+--  Every bind with a description shows up in `hyprctl binds` and in the
+--  cheat sheet opened with Super+Shift+/ (a searchable list in fuzzel).
+-- ════════════════════════════════════════════════════════════════════════
+local CATEGORIES = {
+    "Shell", "System", "Applications", "Windows and columns",
+    "Navigation", "Workspaces", "Screenshots and recording",
+}
 local sheet = {}
 for _, c in ipairs(CATEGORIES) do sheet[c] = {} end
 
@@ -286,25 +349,43 @@ local function bind(keys, action, cat, desc, label, flags)
 end
 
 local M = mainMod .. " + "
-local SYS, APP, WIN, NAV, WS, SHOT = table.unpack(CATEGORIES)
+local SHL, SYS, APP, WIN, NAV, WS, SHOT = table.unpack(CATEGORIES)
 
-----------------------------------------------------------------------
--- KEYBINDINGS
-----------------------------------------------------------------------
+-- ════════════════════════════════════════════════════════════════════════
+--  KEYBINDINGS
+-- ════════════════════════════════════════════════════════════════════════
 
--- ── System ─────────────────────────────────────────────────────────
--- (Mod+Shift+/, the cheat sheet, is bound at the very end of the file)
+-- ── Shell (caelestia) ───────────────────────────────────────────────────
+-- The "caelestia:launcher" global only toggles on key *release*, and the
+-- release is lost when Super is let go before Space. Toggle the drawer
+-- over Quickshell IPC instead: it fires on press, like Super+K.
+bind(M .. "Space",     hl.dsp.exec_cmd("caelestia-shell ipc call drawers toggle launcher"),
+                       SHL, "Launcher (type > for commands: >wallpaper, >scheme, >calc)")
+bind(M .. "A",         shell("dashboard"),   SHL, "Dashboard (media, calendar, weather, performance)")
+bind(M .. "SHIFT + N", shell("sidebar"),     SHL, "Sidebar (notifications, quick settings)")
+bind(M .. "K",         shell("showall"),     SHL, "Show all panels")
+bind(M .. "SHIFT + E", shell("session"),     SHL, "Session menu (log out, reboot, shut down)")
+bind(M .. "L",         shell("lock"),        SHL, "Lock screen")
+bind("CTRL + ALT + C", shell("clearNotifs"), SHL, "Clear notifications", { locked = true })
+bind(M .. "V",         hl.dsp.exec_cmd("pkill fuzzel || caelestia clipboard"),
+                       SHL, "Clipboard history (+Alt - delete entries)", "Super+V / Alt+V")
+bind(M .. "ALT + V",   hl.dsp.exec_cmd("pkill fuzzel || caelestia clipboard -d"))
+bind(M .. "ALT + period", hl.dsp.exec_cmd("pkill fuzzel || caelestia emoji -p"), SHL, "Emoji picker")
+-- Restart the shell if it hangs or after an update
+bind(M .. "CTRL + ALT + R", hl.dsp.exec_cmd("caelestia shell -k; sleep .1; caelestia shell -d"),
+                       SHL, "Restart caelestia shell", { release = true })
+
+-- ── System ─────────────────────────────────────────────────────────────
+-- (Super+Shift+/, the cheat sheet, is bound at the very end of the file)
 bind(M .. "Escape",    toggle_shortcuts_inhibit, SYS, "Toggle shortcut inhibiting for window", { dont_inhibit = true })
 bind(M .. "O",         dpms("disable"),          SYS, "Turn monitors off (Shift - on)", "Super+O / Shift+O")
 bind(M .. "SHIFT + O", dpms("enable"))
-bind(M .. "SHIFT + E", hl.dsp.exec_cmd(EXIT_CMD), SYS, "Quit Hyprland (with confirmation)")
 -- [x] Mod+Shift+M / W / N (dynamic cast target): in Hyprland the cast source
 --     is chosen in the xdg-desktop-portal-hyprland picker.
 
--- ── Applications ───────────────────────────────────────────────────
+-- ── Applications ───────────────────────────────────────────────────────
 bind(M .. "Return",         hl.dsp.exec_cmd("kitty"),                        APP, "Terminal (kitty)")
 bind(M .. "SHIFT + Return", hl.dsp.exec_cmd("kitty --hold sh -c fastfetch"), APP, "Terminal with fastfetch")
-bind(M .. "Space",          hl.dsp.exec_cmd("fuzzel"),                       APP, "App launcher (fuzzel)")
 bind(M .. "B",              hl.dsp.exec_cmd("floorp"),                       APP, "Browser (Floorp)")
 bind(M .. "E",              hl.dsp.exec_cmd("nautilus"),                     APP, "Files (Nautilus)")
 bind(M .. "ALT + T",        hl.dsp.exec_cmd("Telegram"),                     APP, "Telegram")
@@ -313,10 +394,11 @@ bind(M .. "ALT + O",        hl.dsp.exec_cmd("onlyoffice-desktopeditors"),    APP
 bind(M .. "N",              hl.dsp.exec_cmd("java -jar ~/mine/Ninjabrain-Bot-1.5.2.jar"), APP, "Ninjabrain Bot")
 bind(M .. "J",              hl.dsp.exec_cmd("fcitx5-remote -t"),             APP, "Toggle fcitx5 input method")
 
--- ── Windows and columns ────────────────────────────────────────────
+-- ── Windows and columns ────────────────────────────────────────────────
 bind(M .. "Q",         hl.dsp.window.close(),                    WIN, "Close window")
 bind(M .. "T",         hl.dsp.window.float({ action = "toggle" }), WIN, "Toggle floating / tiled")
 bind(M .. "Y",         switch_float_tile,                        WIN, "Focus: floating ⇄ tiled")
+bind(M .. "P",         hl.dsp.window.pin(),                      WIN, "Pin floating window to all workspaces")
 bind(M .. "F",         hl.dsp.window.fullscreen({ mode = "fullscreen" }), WIN, "Fullscreen")
 bind(M .. "SHIFT + F", hl.dsp.window.fullscreen_state({ internal = 0, client = 2, action = "toggle" }),
                                                                  WIN, "Windowed fullscreen")
@@ -339,11 +421,11 @@ bind(M .. "bracketright",         hl.dsp.window.swap({ direction = "right" }))
 bind(M .. "SHIFT + bracketleft",  layout("consume_or_expel prev"), WIN, "Consume or expel window", "Super+Shift+[ / ]")
 bind(M .. "SHIFT + bracketright", layout("consume_or_expel next"))
 
--- Mouse: Mod+LMB drags, Mod+RMB resizes
+-- Mouse: Super+LMB drags, Super+RMB resizes
 bind(M .. "mouse:272", hl.dsp.window.drag(),   WIN, "Drag window", "Super+LMB", { mouse = true })
 bind(M .. "mouse:273", hl.dsp.window.resize(), WIN, "Resize window", "Super+RMB", { mouse = true })
 
--- ── Navigation ─────────────────────────────────────────────────────
+-- ── Navigation ─────────────────────────────────────────────────────────
 bind(M .. "Left",  layout("focus l"), NAV, "Focus column left / right (wraps)", "Super+← / →")
 bind(M .. "Right", layout("focus r"))
 bind(M .. "Up",    focus_window_or_workspace("u"), NAV, "Focus window up / down, workspace at edge", "Super+↑ / ↓")
@@ -365,17 +447,17 @@ bind(M .. "mouse_up",    hl.dsp.focus({ workspace = "r-1" }))
 bind(M .. "mouse_right", layout("focus r"))
 bind(M .. "mouse_left",  layout("focus l"))
 
--- ── Workspaces ─────────────────────────────────────────────────────
--- [~] no built-in overview: jump to the previous workspace (or use the hyprexpo plugin)
+-- ── Workspaces ─────────────────────────────────────────────────────────
+-- [~] no built-in overview: jump to the previous workspace
 bind(M .. "Tab", hl.dsp.focus({ workspace = "previous" }), WS, "Previous workspace")
 
 for i = 1, 10 do
     local key = i % 10 -- workspace 10 -> key 0
     if i == 1 then
-        bind(M .. key,             hl.dsp.focus({ workspace = i }),       WS, "Go to workspace (0 = 10)", "Super+1…0")
+        bind(M .. key,               hl.dsp.focus({ workspace = i }),       WS, "Go to workspace (0 = 10)", "Super+1…0")
         bind(M .. "SHIFT + " .. key, hl.dsp.window.move({ workspace = i }), WS, "Move window to workspace", "Super+Shift+1…0")
     else
-        bind(M .. key,             hl.dsp.focus({ workspace = i }))
+        bind(M .. key,               hl.dsp.focus({ workspace = i }))
         bind(M .. "SHIFT + " .. key, hl.dsp.window.move({ workspace = i }))
     end
 end
@@ -390,32 +472,45 @@ bind(M .. "ALT + Right", hl.dsp.workspace.move({ monitor = "r" }))
 bind(M .. "ALT + Down",  hl.dsp.workspace.move({ monitor = "d" }))
 bind(M .. "ALT + Up",    hl.dsp.workspace.move({ monitor = "u" }))
 
--- ── Screenshots (hyprshot: saves to HYPRSHOT_DIR and copies to clipboard) ──
-bind("Print",              hl.dsp.exec_cmd("hyprshot -m region"),                             SHOT, "Screenshot area")
-bind("CTRL + Print",       hl.dsp.exec_cmd("hyprshot -m window -m active"),                   SHOT, "Screenshot window (+Super - clipboard only)", "Ctrl+Print")
-bind(M .. "CTRL + Print",  hl.dsp.exec_cmd("hyprshot -m window -m active --clipboard-only"))
-bind(M .. "SHIFT + Print", hl.dsp.exec_cmd("hyprshot -m output -m active --clipboard-only"), SHOT, "Screenshot screen to clipboard")
+-- Special workspace: a hidden scratchpad that slides over the current one
+bind(M .. "S",       toggle_special,                                         WS, "Show / hide special workspace")
+bind(M .. "ALT + S", hl.dsp.window.move({ workspace = "special:special" }), WS, "Move window to special workspace")
 
--- ── Media keys (also work on the lock screen) ──────────────────────
+-- ── Screenshots and recording (caelestia) ──────────────────────────────
+-- Area screenshots open the shell's area picker; the result goes to the
+-- clipboard and a notification offers to edit it in swappy.
+bind("Print",               shell("screenshot"),                     SHOT, "Screenshot area")
+bind(M .. "SHIFT + S",      shell("screenshotFreeze"),               SHOT, "Screenshot area (frozen screen)")
+bind("CTRL + Print",        hl.dsp.exec_cmd("caelestia screenshot"), SHOT, "Screenshot whole screen")
+bind(M .. "ALT + R",        hl.dsp.exec_cmd("caelestia record -r"),  SHOT, "Record area (press again to stop)")
+bind(M .. "CTRL + ALT + S", hl.dsp.exec_cmd("caelestia record -s"),  SHOT, "Record screen with sound (press again to stop)")
+
+-- ── Media, volume, brightness (also work on the lock screen) ───────────
+-- Volume goes through wpctl; caelestia shows its OSD by itself.
 -- -l 1.0 caps the volume at 100%
-bind("XF86AudioRaiseVolume", hl.dsp.exec_cmd("wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ 10%+"), { locked = true, repeating = true })
-bind("XF86AudioLowerVolume", hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO_SINK@ 10%-"),        { locked = true, repeating = true })
-bind("XF86AudioMute",        hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"),        { locked = true })
-bind("XF86AudioMicMute",     hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"),      { locked = true })
+bind("XF86AudioRaiseVolume",
+     hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SINK@ 0; wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ 10%+"),
+     { locked = true, repeating = true })
+bind("XF86AudioLowerVolume", hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO_SINK@ 10%-"),   { locked = true, repeating = true })
+bind("XF86AudioMute",        hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"),   { locked = true })
+bind("XF86AudioMicMute",     hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"), { locked = true })
 
-bind("XF86AudioPlay", hl.dsp.exec_cmd("playerctl play-pause"), { locked = true })
-bind("XF86AudioNext", hl.dsp.exec_cmd("playerctl next"),       { locked = true })
-bind("XF86AudioPrev", hl.dsp.exec_cmd("playerctl previous"),   { locked = true })
-bind("XF86AudioStop", hl.dsp.exec_cmd("playerctl stop"),       { locked = true })
+-- Media keys control the player selected in the caelestia dashboard
+bind("XF86AudioPlay",  shell("mediaToggle"), { locked = true })
+bind("XF86AudioPause", shell("mediaToggle"), { locked = true })
+bind("XF86AudioNext",  shell("mediaNext"),   { locked = true })
+bind("XF86AudioPrev",  shell("mediaPrev"),   { locked = true })
+bind("XF86AudioStop",  shell("mediaStop"),   { locked = true })
 
-bind("XF86MonBrightnessUp",   hl.dsp.exec_cmd("brightnessctl --class=backlight set +10%"), { locked = true, repeating = true })
-bind("XF86MonBrightnessDown", hl.dsp.exec_cmd("brightnessctl --class=backlight set 10%-"), { locked = true, repeating = true })
+-- Brightness through the shell (brightnessctl on laptops, ddcutil on monitors)
+bind("XF86MonBrightnessUp",   shell("brightnessUp"),   { locked = true, repeating = true })
+bind("XF86MonBrightnessDown", shell("brightnessDown"), { locked = true, repeating = true })
 
-----------------------------------------------------------------------
--- BUILDING THE CHEAT SHEET
--- The text is generated from the bind descriptions above and written to a
--- temp file on every config load; Mod+Shift+/ shows it in fuzzel.
-----------------------------------------------------------------------
+-- ════════════════════════════════════════════════════════════════════════
+--  BUILDING THE CHEAT SHEET
+--  The text is generated from the bind descriptions above and written to a
+--  temp file on every config load; Super+Shift+/ shows it in fuzzel.
+-- ════════════════════════════════════════════════════════════════════════
 table.insert(sheet[SYS], 1, { "Super+Shift+/", "This cheat sheet (type to search)" })
 
 local SHEET_FILE = (os.getenv("XDG_RUNTIME_DIR") or "/tmp") .. "/hypr-cheatsheet.txt"

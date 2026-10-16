@@ -1,6 +1,6 @@
 {
   imports = [
     ./git.nix
-    # ./gtk.nix
+    ./gtk.nix
   ];
 }
