@@ -13,5 +13,6 @@
     inputs.caelestia-shell.packages.${pkgs.system}.with-cli
     pkgs.qtengine
     pkgs.darkly
+    pkgs.cliphist
   ];
 }

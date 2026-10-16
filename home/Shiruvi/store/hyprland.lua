@@ -96,6 +96,12 @@ hl.config({
         },
     },
 
+    general = {
+        -- Directional focus stops at the edge instead of wrapping around;
+        -- Super+Up/Down uses this to fall through to the next workspace.
+        no_focus_fallback = true,
+    },
+
     binds = {
         workspace_back_and_forth = 1,   -- workspace-auto-back-and-forth
         scroll_event_delay       = 150, -- niri's cooldown-ms=150 on the wheel
@@ -189,6 +195,15 @@ hl.animation({ leaf = "specialWorkspace", enabled = true, speed = 4, bezier = "e
 -- ════════════════════════════════════════════════════════════════════════
 --  WINDOW AND LAYER RULES
 -- ════════════════════════════════════════════════════════════════════════
+-- Ignore maximize requests from apps (kitty, browsers...): in the
+-- scrolling layout a maximized window covers the whole screen instead of
+-- taking a normal column. Super+M / Super+F still maximize on demand.
+hl.window_rule({
+    name           = "no-app-maximize",
+    match          = { class = ".*" },
+    suppress_event = "maximize",
+})
+
 hl.window_rule({
     name            = "keepassxc-hide-cast",
     match           = { class = [[^org\.keepassxc\.KeePassXC$]] },
@@ -235,17 +250,27 @@ local function column_count(w)
     return max + 1
 end
 
+-- Is the scrolling (niri-like) layout active? See toggle_layout below.
+local function is_scrolling()
+    return hl.get_config("general:layout") == "scrolling"
+end
+
 -- focus-window-or-workspace-up/down
+-- Try to move focus inside the column first; if the focused window did not
+-- change (top/bottom of the column, floating window, empty workspace),
+-- switch to the workspace above/below instead. Relies on
+-- general.no_focus_fallback = true, so focus does not wrap inside the column.
 local function focus_window_or_workspace(dir) -- "u" | "d"
     return function()
-        local w = hl.get_active_window()
-        local l = w and w.layout
-        if l and l.column and l.column.windows then
-            local i, n = l.index_in_column, #l.column.windows
-            if (dir == "u" and i > 0) or (dir == "d" and i < n - 1) then
+        local before = hl.get_active_window()
+        if before and not before.floating then
+            if is_scrolling() then
                 dispatch(layout("focus " .. dir))
-                return
+            else
+                dispatch(hl.dsp.focus({ direction = dir == "u" and "up" or "down" }))
             end
+            local after = hl.get_active_window()
+            if after and after.address ~= before.address then return end
         end
         dispatch(hl.dsp.focus({ workspace = dir == "u" and "r-1" or "r+1" }))
     end
@@ -301,6 +326,26 @@ local function toggle_special()
     local active = hl.get_active_special_workspace()
     local target = active and active.name:gsub("^special:", "") or "special"
     dispatch(hl.dsp.workspace.toggle_special(target))
+end
+
+-- Switch between the niri-like scrolling layout and classic dwindle
+-- tiling (windows split the screen, no endless strip). Applies to all
+-- workspaces; a config reload goes back to scrolling.
+local function toggle_layout()
+    local next_layout = is_scrolling() and "dwindle" or "scrolling"
+    hl.config({ general = { layout = next_layout } })
+    hl.exec_cmd("notify-send -a Hyprland -i view-grid 'Layout' '" .. next_layout .. "'")
+end
+
+-- Focus left/right: column in scrolling, neighbouring window in dwindle
+local function focus_horizontal(dir) -- "l" | "r"
+    return function()
+        if is_scrolling() then
+            dispatch(layout("focus " .. dir))
+        else
+            dispatch(hl.dsp.focus({ direction = dir == "l" and "left" or "right" }))
+        end
+    end
 end
 
 -- DPMS through a timer (as the wiki recommends)
@@ -407,6 +452,7 @@ bind(M .. "W",         toggle_maximize_column(true),             WIN, "Maximize 
 bind(M .. "C",         layout("center"),                         WIN, "Center column")
 bind(M .. "SHIFT + C", layout("fit visible"),                    WIN, "Fit visible columns on screen")   -- [~]
 bind(M .. "SHIFT + X", hl.dsp.group.toggle(),                    WIN, "Toggle window group (tabs)")        -- [~]
+bind(M .. "SHIFT + T", toggle_layout,                            WIN, "Layout: scrolling ⇄ classic tiling (dwindle)")
 
 bind(M .. "equal",     layout("colresize +conf"), WIN, "Column width: next / previous preset", "Super+= / −")
 bind(M .. "minus",     layout("colresize -conf"))
@@ -426,11 +472,11 @@ bind(M .. "mouse:272", hl.dsp.window.drag(),   WIN, "Drag window", "Super+LMB", 
 bind(M .. "mouse:273", hl.dsp.window.resize(), WIN, "Resize window", "Super+RMB", { mouse = true })
 
 -- ── Navigation ─────────────────────────────────────────────────────────
-bind(M .. "Left",  layout("focus l"), NAV, "Focus column left / right (wraps)", "Super+← / →")
-bind(M .. "Right", layout("focus r"))
+bind(M .. "Left",  focus_horizontal("l"), NAV, "Focus column left / right (wraps)", "Super+← / →")
+bind(M .. "Right", focus_horizontal("r"))
 bind(M .. "Up",    focus_window_or_workspace("u"), NAV, "Focus window up / down, workspace at edge", "Super+↑ / ↓")
 bind(M .. "Down",  focus_window_or_workspace("d"))
-bind(M .. "SHIFT + grave", layout("focus u"), NAV, "Focus window up in column (wraps)", "Super+Shift+`")
+bind(M .. "SHIFT + grave", layout("focus u"), NAV, "Focus window up in column", "Super+Shift+`")
 
 bind(M .. "SHIFT + Left",  hl.dsp.focus({ monitor = "l" }), NAV, "Focus monitor", "Super+Shift+arrows")
 bind(M .. "SHIFT + Right", hl.dsp.focus({ monitor = "r" }))
