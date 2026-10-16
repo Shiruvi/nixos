@@ -1,66 +1,94 @@
-// This config is in the KDL format: https://kdl.dev
-// "/-" comments out the following node.
-// Check the wiki for a full description of the configuration:
-// https://github.com/YaLTeR/niri/wiki/Configuration:-Overview
+// ┌──────────────────────────────────────────────────────────────────────┐
+// │  niri — ~/.config/niri/config.kdl                                     │
+// │  Dotfiles:     https://github.com/Shiruvi/nixos                       │
+// │  KDL format:   https://kdl.dev                                        │
+// │  "/-" before a node comments out the whole node (with its { ... }).   │
+// │  Docs:         https://github.com/YaLTeR/niri/wiki                    │
+// │  Check config without restarting:  niri validate                      │
+// │  Hotkey cheat sheet:               Mod+Shift+/                        │
+// └──────────────────────────────────────────────────────────────────────┘
 
-// Input device configuration.
-// Find the full list of options on the wiki:
-// https://github.com/YaLTeR/niri/wiki/Configuration:-Input
+
+// ════════════════════════════════════════════════════════════════════════
+//  INPUT
+// ════════════════════════════════════════════════════════════════════════
 input {
     keyboard {
-        repeat-delay 300
-        numlock
-        track-layout "window"
+        repeat-delay 300            // delay before key repeat starts, ms
+        numlock                     // NumLock on at startup
+        track-layout "window"       // remember keyboard layout per window
+
         xkb {
-           layout "us,ru"
-           options "grp:caps_toggle,compose:ralt,ctrl:nocaps"
+            layout "us,ru"
+            // grp:caps_toggle - Caps Lock switches layout
+            // compose:ralt    - Right Alt acts as Compose
+            // (ctrl:nocaps was removed: it also bound Caps Lock and conflicted
+            //  with layout switching - two options on the same key.)
+            options "grp:caps_toggle,compose:ralt"
         }
     }
+
     touchpad {
-        tap
-        dwt
-        natural-scroll
-        
+        tap                         // tap to click
+        dwt                         // disable touchpad while typing
+        natural-scroll              // "natural" scrolling, like on a phone
     }
-    warp-mouse-to-focus
+
+    warp-mouse-to-focus             // move the cursor to the newly focused window
+    // Focus follows the mouse, but only when it doesn't need to
+    // scroll the strip (0% = never scroll).
     focus-follows-mouse max-scroll-amount="0%"
+    // Pressing Mod+N for the current workspace jumps back to the previous one.
     workspace-auto-back-and-forth
 }
 
-// Monitor configuration.
-// Find more information on the wiki:
-// https://github.com/YaLTeR/niri/wiki/Configuration:-Outputs
+
+// ════════════════════════════════════════════════════════════════════════
+//  OUTPUTS
+//  List outputs and modes:  niri msg outputs
+//  Positions are in logical pixels (scale already applied).
+// ════════════════════════════════════════════════════════════════════════
+
+// Built-in laptop display.
 output "eDP-1" {
-    // Run `niri msg outputs` while inside a niri instance to list all outputs and their modes.
     mode "1920x1080@60"
     scale 1
     transform "normal"
     position x=0 y=0
 }
+
+// Main ultrawide monitor: sits below the top row, focused at startup.
 output "DP-1" {
     focus-at-startup
     transform "normal"
     mode "5120x1440@119.970"
     position x=0 y=1440
     layout {
+        // On a screen this wide, new columns default to a quarter of the width.
         default-column-width { proportion 0.25; }
     }
 }
+
 output "DP-2" {
-        position x=2560 y=0
-}
-output "HDMI-A-1"{
-        position x=640 y=360
+    position x=2560 y=0
 }
 
-// Settings that influence how windows are positioned and sized.
-// Find more information on the wiki:
-// https://github.com/YaLTeR/niri/wiki/Configuration:-Layout
+output "HDMI-A-1" {
+    position x=640 y=360
+}
+
+
+// ════════════════════════════════════════════════════════════════════════
+//  LAYOUT
+// ════════════════════════════════════════════════════════════════════════
 layout {
-    gaps 10
-    center-focused-column "on-overflow"
-    always-center-single-column
-    empty-workspace-above-first
+    gaps 10                                 // gaps between windows and screen edges, px
+
+    center-focused-column "on-overflow"     // center a column only if it doesn't fit next to the previous one
+    always-center-single-column             // a lone column is always centered
+    empty-workspace-above-first             // keep an empty workspace above the first one too
+
+    // Presets for Mod+Minus / Mod+Equal (width) and Mod+Shift+Minus / Mod+Shift+Equal (height).
     preset-column-widths {
         proportion 0.25
         proportion 0.3333333
@@ -77,80 +105,120 @@ layout {
         proportion 0.75
         proportion 1.0
     }
+
     default-column-width { proportion 0.5; }
+
+    // Active window highlight (drawn outside the window).
     focus-ring {
         width 2
         active-color "#125763"
         inactive-color "#515752"
     }
+
+    // Border (drawn right at the window edge) is off; focus-ring is enough.
     border {
         off
     }
+
+    // Reserved space at screen edges (for bars, etc.).
     struts {
         left 0
         right 0
         top 0
         bottom 0
     }
+
+    // Transparent workspace background so the backdrop wallpaper shows through
+    // (see the awww layer-rule below).
     background-color "transparent"
-
 }
 
+
+// ════════════════════════════════════════════════════════════════════════
+//  BLUR (global settings; enabled per window/layer by rules below)
+// ════════════════════════════════════════════════════════════════════════
 blur {
-    passes 3
-    offset 2.0
-    noise 0.02
-    saturation 1.5
+    passes 3            // number of passes: more = smoother but heavier on the GPU
+    offset 2.0          // blur radius per pass
+    noise 0.02          // slight noise to hide gradient banding
+    saturation 1.5      // saturation of the blurred background
 }
 
-// startup processes
-spawn-at-startup "awww-daemon"
-spawn-at-startup "fcitx5 -d"
+
+// ════════════════════════════════════════════════════════════════════════
+//  AUTOSTART
+// ════════════════════════════════════════════════════════════════════════
+spawn-at-startup "awww-daemon"              // wallpaper daemon
+spawn-at-startup "fcitx5" "-d"              // input method
+spawn-sh-at-startup "solaar -w hide"        // Logitech devices, hidden to tray
 // spawn-sh-at-startup "swaybg -i Pictures/Wallpapers/back -m fill"
-spawn-sh-at-startup "solaar -w hide"
-// Animation settings.
-// The wiki explains how to configure individual animations:
-// https://github.com/YaLTeR/niri/wiki/Configuration:-Animations
+
+
+// ════════════════════════════════════════════════════════════════════════
+//  ANIMATIONS (defaults)
+// ════════════════════════════════════════════════════════════════════════
 animations {}
 
 
-// Window rules let you adjust behavior for individual windows.
-// Find more information on the wiki:
-// https://github.com/YaLTeR/niri/wiki/Configuration:-Window-Rules
-// layer-rule {
-    // match namespace="^noctalia-overview*"
-    // place-within-backdrop true
-// }
-// Set the regular wallpaper on the backdrop.
+// ════════════════════════════════════════════════════════════════════════
+//  LAYER RULES (layer-shell: wallpaper, launcher, notifications, bars)
+//  List namespaces with:  niri msg layers
+// ════════════════════════════════════════════════════════════════════════
+
+// Put the awww wallpaper on the backdrop: visible behind workspaces and in the overview.
 layer-rule {
-  match namespace="^awww.*"
-  place-within-backdrop true
+    match namespace="^awww"
+    place-within-backdrop true
 }
 
+// Blur behind the launcher (fuzzel uses the "launcher" namespace).
 layer-rule {
-    match namespace="^launcher*"
+    match namespace="^launcher$"
     background-effect {
-       blur true
-       xray false
+        blur true
+        xray false
     }
 }
+
+// Blur behind notifications; hidden from screencasts and recordings.
 layer-rule {
     match namespace="^notifications$"
     background-effect {
-       blur true
-       xray false
+        blur true
+        xray false
     }
     block-out-from "screencast"
 }
 
-// Set transparent workspace background color so you see the backdrop at all times.
+// layer-rule {
+//     match namespace="^noctalia-overview"
+//     place-within-backdrop true
+// }
 
-// Optionally, disable the workspace shadows in the overview.
+
+// ════════════════════════════════════════════════════════════════════════
+//  OVERVIEW
+// ════════════════════════════════════════════════════════════════════════
 overview {
-  workspace-shadow {
-    off
-  }
+    // No shadows under workspaces in the overview.
+    workspace-shadow {
+        off
+    }
 }
+
+
+// ════════════════════════════════════════════════════════════════════════
+//  WINDOW RULES
+//  List app-ids and titles with:  niri msg windows
+// ════════════════════════════════════════════════════════════════════════
+
+// All windows: rounded corners, contents clipped to the rounding.
+window-rule {
+    geometry-corner-radius 20
+    clip-to-geometry true
+}
+
+// Blurred background behind kitty (needs transparency set in kitty's config).
 window-rule {
     match app-id="kitty"
     background-effect {
@@ -158,24 +226,28 @@ window-rule {
         xray false
     }
 }
+
+// The password manager never shows up in screencasts or recordings.
 window-rule {
     match app-id=r#"^org\.keepassxc\.KeePassXC$"#
     block-out-from "screencast"
 }
-window-rule {
-    geometry-corner-radius 20
-    clip-to-geometry true
-}
+
+// Steam toast notifications: bottom-right corner, hidden from screencasts.
 window-rule {
     match app-id="steam" title=r#"^notificationtoasts_\d+_desktop$"#
     default-floating-position x=10 y=10 relative-to="bottom-right"
     block-out-from "screencast"
 }
+
+// Ninjabrain Bot (Minecraft speedrun calculator): floating, top-right.
 window-rule {
     match app-id="ninjabrainbot-Main"
     open-floating true
     default-floating-position x=10 y=10 relative-to="top-right"
 }
+
+// The window currently being cast (dynamic cast target) is highlighted in red.
 window-rule {
     match is-window-cast-target=true
     focus-ring {
@@ -187,141 +259,197 @@ window-rule {
         inactive-color "#7d0d2d"
     }
 }
+
+
+// ════════════════════════════════════════════════════════════════════════
+//  CURSOR
+// ════════════════════════════════════════════════════════════════════════
 cursor {
     xcursor-theme "Bibata-Modern-Ice"
     xcursor-size 24
-    hide-when-typing
-    hide-after-inactive-ms 1000
+    hide-when-typing                // hide the cursor while typing
+    hide-after-inactive-ms 1000     // and after 1 s of mouse inactivity
 }
 
+
+// ════════════════════════════════════════════════════════════════════════
+//  KEYBINDINGS
+//
+//  Mod = Super (Win). The cheat sheet opens with Mod+Shift+/ .
+//  hotkey-overlay-title sets the line shown in the cheat sheet (Pango markup works),
+//  hotkey-overlay-title=null hides a bind from the cheat sheet.
+//
+//  Category colors in the cheat sheet:
+//    ● #89b4fa  applications   ● #a6e3a1  windows and columns
+//    ● #f9e2af  navigation     ● #cba6f7  workspaces
+//    ● #fab387  screenshots    ● #f38ba8  system
+//
+//  Paired binds (←/→, −/+, etc.) take a single line in the cheat sheet:
+//  the second one of the pair is hidden and its key is noted in the title.
+// ════════════════════════════════════════════════════════════════════════
 binds {
-    Mod+N                                                 { spawn-sh "java -jar ~/mine/Ninjabrain-Bot-1.5.2.jar"; }
-    Mod+J                                                 { spawn "fcitx5-remote" "-t"; }
-    Mod+W                                                 { spawn-sh "niri msg action maximize-column && niri msg action center-column"; }
-    
-    // Applications
-    Mod+Return                                            { spawn "kitty"; }
-    Mod+Shift+Return                                      { spawn-sh "kitty --hold sh -c fastfetch"; }
- // sh -c "exec your-launcher"
-    Mod+Space hotkey-overlay-title="Application Launcher" { spawn-sh "fuzzel"; }
+
+    // ── System ──────────────────────────────────────────────────────────
+    Mod+Shift+Slash hotkey-overlay-title="<span foreground='#f38ba8'>●</span>  <b>This cheat sheet</b>    <span foreground='#89b4fa'>● apps</span>  <span foreground='#a6e3a1'>● windows</span>  <span foreground='#f9e2af'>● navigation</span>  <span foreground='#cba6f7'>● workspaces</span>  <span foreground='#fab387'>● screenshots</span>" { show-hotkey-overlay; }
+
+    // Escape hatch when an app (game, VM) has grabbed all hotkeys.
+    // allow-inhibiting=false: niri always handles this bind itself.
+    Mod+Escape allow-inhibiting=false hotkey-overlay-title="<span foreground='#f38ba8'>●</span>  Toggle app shortcut inhibiting" { toggle-keyboard-shortcuts-inhibit; }
+
+    Mod+O       hotkey-overlay-title="<span foreground='#f38ba8'>●</span>  Turn monitors off  <span alpha='55%'>(Shift - on)</span>" { power-off-monitors; }
+    Mod+Shift+O hotkey-overlay-title=null { power-on-monitors; }
+
+    // Screencast: what to send to the dynamic screencast target.
+    Mod+Shift+M hotkey-overlay-title="<span foreground='#f38ba8'>●</span>  Cast: this monitor  <span alpha='55%'>(Shift+W - window, Shift+N - clear)</span>" { set-dynamic-cast-monitor; }
+    Mod+Shift+W hotkey-overlay-title=null { set-dynamic-cast-window; }
+    Mod+Shift+N hotkey-overlay-title=null { clear-dynamic-cast-target; }
+
+    // Quit niri, with confirmation (Mod+E is right next to it, easy to miss).
+    Mod+Shift+E hotkey-overlay-title="<span foreground='#f38ba8'>●</span>  Quit niri" { quit; }
+
+    // ── Applications ────────────────────────────────────────────────────
+    Mod+Return       hotkey-overlay-title="<span foreground='#89b4fa'>●</span>  Terminal (kitty)" { spawn "kitty"; }
+    Mod+Shift+Return hotkey-overlay-title="<span foreground='#89b4fa'>●</span>  Terminal with fastfetch" { spawn "kitty" "--hold" "sh" "-c" "fastfetch"; }
+    Mod+Space        hotkey-overlay-title="<span foreground='#89b4fa'>●</span>  App launcher (fuzzel)" { spawn "fuzzel"; }
     // Mod+Space hotkey-overlay-title="Application Launcher" { spawn-sh "noctalia-shell ipc call launcher toggle"; }
-    Mod+B                                                 { spawn "floorp"; }
-    Mod+E                                                 { spawn-sh "nautilus"; }
-    Mod+Alt+T                                             { spawn-sh "exec Telegram"; }
-    Mod+Alt+D                                             { spawn-sh "exec vesktop"; }
-    Mod+Alt+O                                             { spawn "onlyoffice-desktopeditors"; }
-    // Mod+V                                                 { spawn-sh "noctalia-shell ipc call launcher clipboard"; }
+    Mod+B            hotkey-overlay-title="<span foreground='#89b4fa'>●</span>  Browser (Floorp)" { spawn "floorp"; }
+    Mod+E            hotkey-overlay-title="<span foreground='#89b4fa'>●</span>  Files (Nautilus)" { spawn "nautilus"; }
+    Mod+Alt+T        hotkey-overlay-title="<span foreground='#89b4fa'>●</span>  Telegram" { spawn "Telegram"; }
+    Mod+Alt+D        hotkey-overlay-title="<span foreground='#89b4fa'>●</span>  Discord (Vesktop)" { spawn "vesktop"; }
+    Mod+Alt+O        hotkey-overlay-title="<span foreground='#89b4fa'>●</span>  OnlyOffice" { spawn "onlyoffice-desktopeditors"; }
+    Mod+N            hotkey-overlay-title="<span foreground='#89b4fa'>●</span>  Ninjabrain Bot" { spawn-sh "java -jar ~/mine/Ninjabrain-Bot-1.5.2.jar"; }
+    Mod+J            hotkey-overlay-title="<span foreground='#89b4fa'>●</span>  Toggle fcitx5 input method" { spawn "fcitx5-remote" "-t"; }
+    // Mod+V { spawn-sh "noctalia-shell ipc call launcher clipboard"; }
 
-    Mod+Shift+E                                           { quit skip-confirmation=true; }
+    // ── Windows and columns ─────────────────────────────────────────────
+    Mod+Q       hotkey-overlay-title="<span foreground='#a6e3a1'>●</span>  Close window" { close-window; }
+    Mod+T       hotkey-overlay-title="<span foreground='#a6e3a1'>●</span>  Toggle floating / tiled" { toggle-window-floating; }
+    Mod+Y       hotkey-overlay-title="<span foreground='#a6e3a1'>●</span>  Focus: floating ⇄ tiled" { switch-focus-between-floating-and-tiling; }
+    Mod+F       hotkey-overlay-title="<span foreground='#a6e3a1'>●</span>  Fullscreen" { fullscreen-window; }
+    Mod+Shift+F hotkey-overlay-title="<span foreground='#a6e3a1'>●</span>  Windowed fullscreen" { toggle-windowed-fullscreen; }
+    Mod+M       hotkey-overlay-title="<span foreground='#a6e3a1'>●</span>  Maximize column" { maximize-column; }
+    // Maximize and center right away (two actions via IPC).
+    Mod+W       hotkey-overlay-title="<span foreground='#a6e3a1'>●</span>  Maximize and center column" { spawn-sh "niri msg action maximize-column && niri msg action center-column"; }
+    Mod+C       hotkey-overlay-title="<span foreground='#a6e3a1'>●</span>  Center column" { center-column; }
+    Mod+Shift+C hotkey-overlay-title="<span foreground='#a6e3a1'>●</span>  Center visible columns" { center-visible-columns; }
+    Mod+Shift+X hotkey-overlay-title="<span foreground='#a6e3a1'>●</span>  Toggle tabbed column" { toggle-column-tabbed-display; }
 
-    // Audio
-    XF86AudioRaiseVolume allow-when-locked=true           { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1+"; }
-    XF86AudioLowerVolume allow-when-locked=true           { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1-"; }
-    XF86AudioMute        allow-when-locked=true           { spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"; }
-    XF86AudioMicMute     allow-when-locked=true           { spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"; }
+    Mod+Equal       hotkey-overlay-title="<span foreground='#a6e3a1'>●</span>  Column width: next preset  <span alpha='55%'>(Minus - previous)</span>" { switch-preset-column-width; }
+    Mod+Minus       hotkey-overlay-title=null { switch-preset-column-width-back; }
+    Mod+Shift+Equal hotkey-overlay-title="<span foreground='#a6e3a1'>●</span>  Window height: next preset  <span alpha='55%'>(Shift+Minus - previous)</span>" { switch-preset-window-height; }
+    Mod+Shift+Minus hotkey-overlay-title=null { switch-preset-window-height-back; }
+    Mod+R           hotkey-overlay-title="<span foreground='#a6e3a1'>●</span>  Reset window height" { reset-window-height; }
 
-    //sound
-    XF86AudioPlay allow-when-locked=true                  { spawn-sh "playerctl play-pause"; }
-    XF86AudioNext allow-when-locked=true                  { spawn-sh "playerctl next"; }
-    XF86AudioPrev allow-when-locked=true                  { spawn-sh "playerctl previous"; }
-    XF86AudioStop allow-when-locked=true                  { spawn-sh "playerctl stop"; }
+    Mod+bracketleft        hotkey-overlay-title="<span foreground='#a6e3a1'>●</span>  Swap window with neighbor  <span alpha='55%'>([ left, ] right)</span>" { swap-window-left; }
+    Mod+bracketright       hotkey-overlay-title=null { swap-window-right; }
+    Mod+Shift+bracketleft  hotkey-overlay-title="<span foreground='#a6e3a1'>●</span>  Consume or expel window  <span alpha='55%'>([ ])</span>" { consume-or-expel-window-left; }
+    Mod+Shift+bracketright hotkey-overlay-title=null { consume-or-expel-window-right; }
 
-    //brightness
-    XF86MonBrightnessUp allow-when-locked=true            { spawn "brightnessctl" "--class=backlight" "set" "+10%"; }
-    XF86MonBrightnessDown allow-when-locked=true          { spawn "brightnessctl" "--class=backlight" "set" "10%-"; }
+    // ── Navigation ──────────────────────────────────────────────────────
+    // At the end of the strip, focus wraps around to the other end.
+    Mod+Left  hotkey-overlay-title="<span foreground='#f9e2af'>●</span>  Focus column left / right  <span alpha='55%'>(← →, wraps)</span>" { focus-column-left-or-last; }
+    Mod+Right hotkey-overlay-title=null { focus-column-right-or-first; }
+    // Moves between windows in a column; at the column's edge, to the next workspace.
+    Mod+Up    hotkey-overlay-title="<span foreground='#f9e2af'>●</span>  Focus window or workspace up / down  <span alpha='55%'>(↑ ↓)</span>" { focus-window-or-workspace-up; }
+    Mod+Down  hotkey-overlay-title=null { focus-window-or-workspace-down; }
+    Mod+Shift+Grave hotkey-overlay-title="<span foreground='#f9e2af'>●</span>  Focus window up in column (wraps)" { focus-window-up-or-bottom; }
 
-    // Screencasting
-    Mod+Shift+M                                           { set-dynamic-cast-monitor; }
-    Mod+Shift+W                                           { set-dynamic-cast-window; }
-    Mod+Shift+N                                           { clear-dynamic-cast-target; }
-    
-    //PC control
-    Mod+O                                                 { power-off-monitors; }
-    Mod+Shift+O                                           { power-on-monitors; }
-    // Windows and Columns
-    Mod+WheelScrollDown cooldown-ms=150                   { focus-workspace-down; }
-    Mod+WheelScrollUp   cooldown-ms=150                   { focus-workspace-up; }
-    Mod+WheelScrollRight                                  { focus-column-right-or-first; }
-    Mod+WheelScrollLeft                                   { focus-column-left-or-last; }
-    Mod+C                                                 { center-column; }
-    Mod+Shift+C                                           { center-visible-columns; }
-    // Mod+X                                                 { spawn-sh "nirius toggle-mark"; }
-    Mod+Shift+X                                           { toggle-column-tabbed-display; }
-    // Mod+Z                                                 { spawn-sh "nirius toggle-follow-mode"; }
-    Mod+Q                                                 { close-window; }
-    Mod+T                                                 { toggle-window-floating; }
-    Mod+Y                                           { switch-focus-between-floating-and-tiling; }
-    Mod+M                                                 { maximize-column; }
-    Mod+F                                                 { fullscreen-window; }
-    Mod+Shift+F                                           { toggle-windowed-fullscreen; }
-    Mod+Left                                              { focus-column-left-or-last; }
-    Mod+Right                                             { focus-column-right-or-first; }
-    Mod+Down                                              { focus-window-or-workspace-down; }
-    Mod+Up                                                { focus-window-or-workspace-up; }
-    Mod+Shift+Left                                        { focus-monitor-left; }
-    Mod+Shift+Right                                       { focus-monitor-right; }
-    Mod+Shift+Down                                        { focus-monitor-down; }
-    Mod+Shift+Up                                          { focus-monitor-up; }
-    Mod+Control+Down                                      { move-window-to-monitor-down; }
-    Mod+Control+Up                                        { move-window-to-monitor-up; }
-    Mod+Control+Left                                      { move-column-left-or-to-monitor-left; }
-    Mod+Control+Right                                     { move-column-right-or-to-monitor-right; }
-    Mod+Minus                                             { switch-preset-column-width-back; }
-    Mod+Equal                                             { switch-preset-column-width; }
-    Mod+Shift+Minus                                       { switch-preset-window-height-back; }
-    Mod+Shift+Equal                                       { switch-preset-window-height; }
-    Mod+R                                                 { reset-window-height; }
-    Mod+bracketleft                                       { swap-window-left; }
-    Mod+bracketright                                      { swap-window-right; }
-    Mod+Shift+bracketleft                                 { consume-or-expel-window-left; }
-    Mod+Shift+bracketright                                { consume-or-expel-window-right; }
-    Mod+Period                                            { move-column-to-workspace-down; }
-    Mod+Comma                                             { move-column-to-workspace-up; }
-    Mod+Shift+Period                                      { move-workspace-down; }
-    Mod+Shift+Comma                                       { move-workspace-up; }
-    // Mod+Grave                                             { spawn-sh "nirius focus-marked"; }
-    Mod+Shift+Grave                                       { focus-window-up-or-bottom; }
-    // Mod+S                                                 { spawn-sh "nirius scratchpad-show"; }
-    // Mod+Shift+S                                           { spawn-sh "nirius scratchpad-toggle"; }
-    // Mod+Alt+S                                             { spawn-sh "nirius scratchpad-show-all"; }
+    Mod+Shift+Left  hotkey-overlay-title="<span foreground='#f9e2af'>●</span>  Focus monitor  <span alpha='55%'>(Shift + arrows)</span>" { focus-monitor-left; }
+    Mod+Shift+Right hotkey-overlay-title=null { focus-monitor-right; }
+    Mod+Shift+Down  hotkey-overlay-title=null { focus-monitor-down; }
+    Mod+Shift+Up    hotkey-overlay-title=null { focus-monitor-up; }
 
-    // Workspaces
-    Mod+Alt+Down                                          { move-workspace-to-monitor-down; }
-    Mod+Alt+Up                                            { move-workspace-to-monitor-up; }
-    Mod+Alt+Right                                         { move-workspace-to-monitor-right; }
-    Mod+Alt+Left                                          { move-workspace-to-monitor-left; }
-    Mod+1                                                 { focus-workspace 1; }
-    Mod+2                                                 { focus-workspace 2; }
-    Mod+3                                                 { focus-workspace 3; }
-    Mod+4                                                 { focus-workspace 4; }
-    Mod+5                                                 { focus-workspace 5; }
-    Mod+6                                                 { focus-workspace 6; }
-    Mod+7                                                 { focus-workspace 7; }
-    Mod+8                                                 { focus-workspace 8; }
-    Mod+9                                                 { focus-workspace 9; }
-    Mod+0                                                 { focus-workspace 0; }
-    Mod+Shift+1                                           { move-column-to-workspace 1; }
-    Mod+Shift+2                                           { move-column-to-workspace 2; }
-    Mod+Shift+3                                           { move-column-to-workspace 3; }
-    Mod+Shift+4                                           { move-column-to-workspace 4; }
-    Mod+Shift+5                                           { move-column-to-workspace 5; }
-    Mod+Shift+6                                           { move-column-to-workspace 6; }
-    Mod+Shift+7                                           { move-column-to-workspace 7; }
-    Mod+Shift+8                                           { move-column-to-workspace 8; }
-    Mod+Shift+9                                           { move-column-to-workspace 9; }
-    Mod+Shift+0                                           { move-column-to-workspace 10; }
-    Mod+Tab                                               { toggle-overview; }
+    // ← → move the column along the strip, and to the next monitor at the edge;
+    // ↑ ↓ move the window to the monitor above/below.
+    Mod+Ctrl+Left  hotkey-overlay-title="<span foreground='#f9e2af'>●</span>  Move column / window  <span alpha='55%'>(Ctrl + arrows, across monitors)</span>" { move-column-left-or-to-monitor-left; }
+    Mod+Ctrl+Right hotkey-overlay-title=null { move-column-right-or-to-monitor-right; }
+    Mod+Ctrl+Down  hotkey-overlay-title=null { move-window-to-monitor-down; }
+    Mod+Ctrl+Up    hotkey-overlay-title=null { move-window-to-monitor-up; }
 
-    // Screenshots
-    Print                                                 { screenshot; }
-    Ctrl+Print                                            { screenshot-window; }
-    Mod+Ctrl+Print                                        { screenshot-window write-to-disk=false; }
-    Mod+Shift+Print                                       { screenshot-screen write-to-disk=false; }
+    // Mouse wheel with Mod: vertical = workspaces, horizontal = columns.
+    // cooldown-ms keeps one wheel flick from skipping several workspaces.
+    Mod+WheelScrollDown cooldown-ms=150 hotkey-overlay-title=null { focus-workspace-down; }
+    Mod+WheelScrollUp   cooldown-ms=150 hotkey-overlay-title=null { focus-workspace-up; }
+    Mod+WheelScrollRight                hotkey-overlay-title=null { focus-column-right-or-first; }
+    Mod+WheelScrollLeft                 hotkey-overlay-title=null { focus-column-left-or-last; }
+
+    // Mod+X       { spawn-sh "nirius toggle-mark"; }
+    // Mod+Z       { spawn-sh "nirius toggle-follow-mode"; }
+    // Mod+Grave   { spawn-sh "nirius focus-marked"; }
+    // Mod+S       { spawn-sh "nirius scratchpad-show"; }
+    // Mod+Shift+S { spawn-sh "nirius scratchpad-toggle"; }
+    // Mod+Alt+S   { spawn-sh "nirius scratchpad-show-all"; }
+
+    // ── Workspaces ──────────────────────────────────────────────────────
+    Mod+Tab hotkey-overlay-title="<span foreground='#cba6f7'>●</span>  Overview" { toggle-overview; }
+
+    Mod+1 hotkey-overlay-title="<span foreground='#cba6f7'>●</span>  Go to workspace  <span alpha='55%'>(1 … 9, 0 = 10)</span>" { focus-workspace 1; }
+    Mod+2 hotkey-overlay-title=null { focus-workspace 2; }
+    Mod+3 hotkey-overlay-title=null { focus-workspace 3; }
+    Mod+4 hotkey-overlay-title=null { focus-workspace 4; }
+    Mod+5 hotkey-overlay-title=null { focus-workspace 5; }
+    Mod+6 hotkey-overlay-title=null { focus-workspace 6; }
+    Mod+7 hotkey-overlay-title=null { focus-workspace 7; }
+    Mod+8 hotkey-overlay-title=null { focus-workspace 8; }
+    Mod+9 hotkey-overlay-title=null { focus-workspace 9; }
+    Mod+0 hotkey-overlay-title=null { focus-workspace 10; }   // was 0, which isn't a valid index
+
+    Mod+Shift+1 hotkey-overlay-title="<span foreground='#cba6f7'>●</span>  Move column to workspace  <span alpha='55%'>(Shift + 1 … 0)</span>" { move-column-to-workspace 1; }
+    Mod+Shift+2 hotkey-overlay-title=null { move-column-to-workspace 2; }
+    Mod+Shift+3 hotkey-overlay-title=null { move-column-to-workspace 3; }
+    Mod+Shift+4 hotkey-overlay-title=null { move-column-to-workspace 4; }
+    Mod+Shift+5 hotkey-overlay-title=null { move-column-to-workspace 5; }
+    Mod+Shift+6 hotkey-overlay-title=null { move-column-to-workspace 6; }
+    Mod+Shift+7 hotkey-overlay-title=null { move-column-to-workspace 7; }
+    Mod+Shift+8 hotkey-overlay-title=null { move-column-to-workspace 8; }
+    Mod+Shift+9 hotkey-overlay-title=null { move-column-to-workspace 9; }
+    Mod+Shift+0 hotkey-overlay-title=null { move-column-to-workspace 10; }
+
+    Mod+Period       hotkey-overlay-title="<span foreground='#cba6f7'>●</span>  Move column to workspace down / up  <span alpha='55%'>(. ,)</span>" { move-column-to-workspace-down; }
+    Mod+Comma        hotkey-overlay-title=null { move-column-to-workspace-up; }
+    Mod+Shift+Period hotkey-overlay-title="<span foreground='#cba6f7'>●</span>  Move workspace down / up  <span alpha='55%'>(Shift + . ,)</span>" { move-workspace-down; }
+    Mod+Shift+Comma  hotkey-overlay-title=null { move-workspace-up; }
+
+    Mod+Alt+Left  hotkey-overlay-title="<span foreground='#cba6f7'>●</span>  Move workspace to monitor  <span alpha='55%'>(Alt + arrows)</span>" { move-workspace-to-monitor-left; }
+    Mod+Alt+Right hotkey-overlay-title=null { move-workspace-to-monitor-right; }
+    Mod+Alt+Down  hotkey-overlay-title=null { move-workspace-to-monitor-down; }
+    Mod+Alt+Up    hotkey-overlay-title=null { move-workspace-to-monitor-up; }
+
+    // ── Screenshots ─────────────────────────────────────────────────────
+    // Saved to screenshot-path (see below) and copied to the clipboard.
+    Print           hotkey-overlay-title="<span foreground='#fab387'>●</span>  Screenshot area" { screenshot; }
+    Ctrl+Print      hotkey-overlay-title="<span foreground='#fab387'>●</span>  Screenshot window  <span alpha='55%'>(+Mod - clipboard only)</span>" { screenshot-window; }
+    Mod+Ctrl+Print  hotkey-overlay-title=null { screenshot-window write-to-disk=false; }
+    Mod+Shift+Print hotkey-overlay-title="<span foreground='#fab387'>●</span>  Screenshot screen to clipboard" { screenshot-screen write-to-disk=false; }
+
+    // ── Media keys (also work on the lock screen) ───────────────────────
+    // -l 1.0 keeps the volume from going above 100%.
+    XF86AudioRaiseVolume allow-when-locked=true hotkey-overlay-title=null { spawn-sh "wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ 0.1+"; }
+    XF86AudioLowerVolume allow-when-locked=true hotkey-overlay-title=null { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1-"; }
+    XF86AudioMute        allow-when-locked=true hotkey-overlay-title=null { spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"; }
+    XF86AudioMicMute     allow-when-locked=true hotkey-overlay-title=null { spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"; }
+
+    XF86AudioPlay allow-when-locked=true hotkey-overlay-title=null { spawn-sh "playerctl play-pause"; }
+    XF86AudioNext allow-when-locked=true hotkey-overlay-title=null { spawn-sh "playerctl next"; }
+    XF86AudioPrev allow-when-locked=true hotkey-overlay-title=null { spawn-sh "playerctl previous"; }
+    XF86AudioStop allow-when-locked=true hotkey-overlay-title=null { spawn-sh "playerctl stop"; }
+
+    XF86MonBrightnessUp   allow-when-locked=true hotkey-overlay-title=null { spawn "brightnessctl" "--class=backlight" "set" "+10%"; }
+    XF86MonBrightnessDown allow-when-locked=true hotkey-overlay-title=null { spawn "brightnessctl" "--class=backlight" "set" "10%-"; }
 }
 
-// misc configuration
+
+// ════════════════════════════════════════════════════════════════════════
+//  MISC
+// ════════════════════════════════════════════════════════════════════════
+
+// Where to save screenshots (strftime format).
 screenshot-path "~/Pictures/Screenshots/Screenshot From %Y-%m-%d %H-%M-%S.png"
+
+// Ask apps not to draw their own title bars (CSD).
 prefer-no-csd true
+
 hotkey-overlay {
-    skip-at-startup
+    skip-at-startup     // don't show the cheat sheet when niri starts
+    hide-not-bound      // hide default actions that aren't bound to anything
 }
