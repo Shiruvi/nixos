@@ -13,7 +13,7 @@
 {
   xdg.desktopEntries.tgwsproxy = {
     name = "TgWsProxy";
-    exec = "steam-run ~/Downloads/TgWsProxy_linux_amd64";
+    exec = "steam-run /home/Shiruvi/Downloads/TgWsProxy_linux_amd64";
     icon = "accessories-calculator"; # any name from Fluent, or a full path to an image
   };
 }
