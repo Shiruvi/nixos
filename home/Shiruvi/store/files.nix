@@ -7,7 +7,7 @@
     ".config/superfile".source = ./superfile;
     ".config/fuzzel".source = ./fuzzel;
     ".config/mako".source = ./mako;
-    ".config/caelestia/templates".source = ./caelestia/templates;
+    ".config/caelestia".source = ./caelestia;
     ".config/hypr/hyprland.lua".source = ./hyprland.lua;
     ".config/fish/config.fish".source = ./config.fish;
   };

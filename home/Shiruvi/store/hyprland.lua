@@ -61,16 +61,28 @@ hl.env("ELECTRON_OZONE_PLATFORM_HINT", "auto")
 --  AUTOSTART
 -- ════════════════════════════════════════════════════════════════════════
 hl.on("hyprland.start", function()
-    -- Caelestia shell. Started through the CLI so the Nix wrapper
-    -- (`caelestia-shell`) sets FONTCONFIG_FILE for its icon fonts.
+    -- Systemd session: graphical-session.target is a hard requirement
+    -- (Requisite=) of xdg-desktop-portal, so without it screen sharing,
+    -- OBS and file pickers fail. hyprland-session.target (hypr.nix) binds
+    -- graphical-session.target; the environment is exported first.
+    hl.exec_cmd("dbus-update-activation-environment --systemd --all"
+        .. " && systemctl --user start hyprland-session.target")
+
+    -- Caelestia shell, through its Nix wrapper (sets FONTCONFIG_FILE for
+    -- the icon fonts and puts the caelestia CLI on the shell's PATH).
     -- It also draws the wallpaper: set it with `caelestia wallpaper -f <file>`.
-    hl.exec_cmd("caelestia shell -d")
+    hl.exec_cmd("caelestia-shell -d")
 
     -- Clipboard history for `caelestia clipboard` (Super+V)
     hl.exec_cmd("wl-paste --type text --watch cliphist store")
     hl.exec_cmd("wl-paste --type image --watch cliphist store")
 
     hl.exec_cmd("fcitx5 -d")
+    -- XWayland starts with an "us"-only keymap and never takes Hyprland's
+    -- us,ru, so X11 apps (Steam, OnlyOffice) cannot switch to Russian.
+    -- Set it on the X server once XWayland is up (retries until it is);
+    -- Hyprland then switches the group as usual.
+    hl.exec_cmd("sh -c 'sleep 2; for i in $(seq 20); do setxkbmap -layout us,ru && break; sleep 0.5; done'")
     hl.exec_cmd("solaar -w hide")
     hl.exec_cmd("hyprctl setcursor Bibata-Modern-Ice 24")
     -- equivalent of niri's focus-at-startup on DP-1
@@ -83,9 +95,10 @@ end)
 hl.config({
     input = {
         kb_layout          = "us,ru",
-        -- Caps Lock switches layout, Right Alt is Compose
-        -- (ctrl:nocaps removed: it fought grp:caps_toggle over the same key).
-        kb_options         = "grp:caps_toggle,compose:ralt",
+        -- Right Alt is Compose. Caps Lock is disabled here and switches the
+        -- layout through a bind (see "Layout switching" below): with
+        -- grp:caps_toggle XWayland apps (Steam, OnlyOffice) never switch.
+        kb_options         = "caps:none,compose:ralt",
         repeat_delay       = 300,
         numlock_by_default = true,
         follow_mouse       = 1,      -- focus-follows-mouse
@@ -417,7 +430,7 @@ bind(M .. "V",         hl.dsp.exec_cmd("pkill fuzzel || caelestia clipboard"),
 bind(M .. "ALT + V",   hl.dsp.exec_cmd("pkill fuzzel || caelestia clipboard -d"))
 bind(M .. "ALT + period", hl.dsp.exec_cmd("pkill fuzzel || caelestia emoji -p"), SHL, "Emoji picker")
 -- Restart the shell if it hangs or after an update
-bind(M .. "CTRL + ALT + R", hl.dsp.exec_cmd("caelestia shell -k; sleep .1; caelestia shell -d"),
+bind(M .. "CTRL + ALT + R", hl.dsp.exec_cmd("caelestia shell -k; sleep .3; caelestia-shell -d"),
                        SHL, "Restart caelestia shell", { release = true })
 
 -- ── System ─────────────────────────────────────────────────────────────
@@ -427,6 +440,15 @@ bind(M .. "O",         dpms("disable"),          SYS, "Turn monitors off (Shift 
 bind(M .. "SHIFT + O", dpms("enable"))
 -- [x] Mod+Shift+M / W / N (dynamic cast target): in Hyprland the cast source
 --     is chosen in the xdg-desktop-portal-hyprland picker.
+
+-- ── Layout switching ───────────────────────────────────────────────────
+-- Caps Lock (keycode 66; its keysym is disabled by caps:none) switches
+-- us/ru on every keyboard at once. The compositor consumes the key, so
+-- XWayland only sees the new layout group and does not toggle it back
+-- with its own copy of grp:caps_toggle; "all" keeps several keyboards
+-- (Wooting, Logitech receiver) on the same layout.
+bind("code:66", hl.dsp.exec_cmd("hyprctl switchxkblayout all next"),
+                SYS, "Switch keyboard layout (us / ru)", "Caps Lock", { locked = true })
 
 -- ── Applications ───────────────────────────────────────────────────────
 bind(M .. "Return",         hl.dsp.exec_cmd("kitty"),                        APP, "Terminal (kitty)")
@@ -494,7 +516,7 @@ bind(M .. "mouse_right", layout("focus r"))
 bind(M .. "mouse_left",  layout("focus l"))
 
 -- ── Workspaces ─────────────────────────────────────────────────────────
--- [~] no built-in overview: jump to the previous workspace
+-- [x] no built-in overview: jump to the previous workspace
 bind(M .. "Tab", hl.dsp.focus({ workspace = "previous" }), WS, "Previous workspace")
 
 for i = 1, 10 do
